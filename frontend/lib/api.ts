@@ -30,6 +30,7 @@ export async function fetchAPI<T>(
         headers: {
             'Content-Type': 'application/json',
         },
+        cache: 'no-store' as RequestCache, // Ensure fresh data on every request
         ...options,
     };
 
