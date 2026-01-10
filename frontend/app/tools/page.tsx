@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Calculator, TrendingUp, Landmark, Percent } from 'lucide-react';
+import { Calculator, TrendingUp, Landmark, Percent, DollarSign } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
