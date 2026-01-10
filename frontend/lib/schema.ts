@@ -70,6 +70,21 @@ export function generateBreadcrumbSchema(items: Array<{ name: string; url: strin
     };
 }
 
+export function generateFAQSchema(faqs: { question: string; answer: string }[]) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map(faq => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: faq.answer,
+            },
+        })),
+    };
+}
+
 export function generateWebsiteSchema() {
     return {
         '@context': 'https://schema.org',

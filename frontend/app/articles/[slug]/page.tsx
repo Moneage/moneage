@@ -8,7 +8,8 @@ import { Calendar } from 'lucide-react';
 import { generateMetadata as generateMeta } from '@/lib/metadata';
 import type { Metadata } from 'next';
 import StructuredData from '@/components/StructuredData';
-import { generateArticleSchema, generateBreadcrumbSchema, generatePersonSchema } from '@/lib/schema';
+import { generateArticleSchema, generateBreadcrumbSchema, generatePersonSchema, generateFAQSchema } from '@/lib/schema';
+import { parseFAQFromContent } from '@/lib/contentParser';
 import ArticleActions from '@/components/ArticleActions';
 import TextToSpeech from '@/components/TextToSpeech';
 
@@ -115,6 +116,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 bio: article.author.bio || undefined,
                 avatar: article.author.avatar || undefined,
             })} />}
+
+            {/* Auto-generated FAQ Schema */}
+            {(() => {
+                const faqs = parseFAQFromContent(article.content);
+                return faqs.length > 0 ? <StructuredData data={generateFAQSchema(faqs)} /> : null;
+            })()}
 
             <article className="max-w-4xl mx-auto">
                 {/* Breadcrumb */}
