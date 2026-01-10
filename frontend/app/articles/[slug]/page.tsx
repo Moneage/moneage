@@ -13,6 +13,7 @@ import { parseFAQFromContent } from '@/lib/contentParser';
 import ArticleActions from '@/components/ArticleActions';
 import TextToSpeech from '@/components/TextToSpeech';
 import ReadNext from '@/components/ReadNext';
+import ArticleReader from '@/components/ArticleReader';
 
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -207,16 +208,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     </div>
                 )}
 
-                {/* Audio Player */}
-                <TextToSpeech title={article.title} content={article.content} />
+                {/* Audio Player and Reader Controls */}
+                <div className="flex flex-col gap-8 mb-8">
+                    <TextToSpeech title={article.title} content={article.content} />
+                </div>
 
-                {/* Content */}
-                <div className="prose prose-lg prose-slate max-w-none mb-16">
+                {/* Content with Text Size Controls */}
+                <ArticleReader>
                     {article.content && Array.isArray(article.content) ? (
                         article.content.map((block: any, index: number) => {
                             if (block.type === 'paragraph') {
                                 return (
-                                    <p key={index} className="mb-6 text-slate-700 leading-relaxed text-lg">
+                                    <p key={index} className="mb-6 text-slate-700 leading-relaxed">
                                         {block.children.map((child: any, childIndex: number) => {
                                             if (child.text) {
                                                 let text = child.text;
@@ -245,11 +248,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     ) : (
                         <p className="text-slate-600">No content available.</p>
                     )}
-                </div>
+                </ArticleReader>
 
                 {/* Author Bio */}
                 {article.author && (
-                    <div className="card p-8 bg-gradient-to-br from-slate-50 to-blue-50 border-blue-100">
+                    <div className="card p-8 bg-gradient-to-br from-slate-50 to-blue-50 border-blue-100 mb-12">
                         <div className="flex items-start gap-4">
                             {article.author.avatar?.url && (
                                 <div className="relative w-20 h-20 rounded-full overflow-hidden ring-4 ring-white shadow-lg flex-shrink-0">
@@ -270,6 +273,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         </div>
                     </div>
                 )}
+
+                {/* Bottom Actions */}
+                <div className="flex items-center justify-between py-6 border-t border-b border-slate-200 mb-16">
+                    <span className="font-semibold text-slate-900">Share this article:</span>
+                    <ArticleActions
+                        articleTitle={article.title}
+                        articleUrl={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/articles/${article.slug}`}
+                        articleSlug={article.slug}
+                    />
+                </div>
 
                 {/* Smart "Read Next" Section */}
                 {relatedArticles.length > 0 && <ReadNext articles={relatedArticles} />}
