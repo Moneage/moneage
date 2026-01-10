@@ -111,12 +111,12 @@ export async function searchArticles(query: string) {
                     },
                 },
                 {
-                    description: {
+                    excerpt: {
                         $containsi: query,
                     },
                 },
                 {
-                    content: {
+                    slug: {
                         $containsi: query,
                     },
                 },
