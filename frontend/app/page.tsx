@@ -1,5 +1,6 @@
 import { getArticles } from '@/lib/api';
 import HeroArticle from '@/components/HeroArticle';
+import MarketTicker from '@/components/MarketTicker';
 import SidebarArticleCard from '@/components/SidebarArticleCard';
 import ArticleCard from '@/components/ArticleCard';
 import { TrendingUp } from 'lucide-react';
@@ -30,6 +31,7 @@ export default async function Home() {
 
   return (
     <div className="space-y-12">
+      <MarketTicker />
       {articles.length > 0 ? (
         <>
           {/* Hero Section with Sidebar */}
