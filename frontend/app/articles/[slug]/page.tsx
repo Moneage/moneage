@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 import StructuredData from '@/components/StructuredData';
 import { generateArticleSchema, generateBreadcrumbSchema, generatePersonSchema } from '@/lib/schema';
 import ArticleActions from '@/components/ArticleActions';
+import TextToSpeech from '@/components/TextToSpeech';
 
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -186,7 +187,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
                 {/* Featured Image */}
                 {imageUrl && (
-                    <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden mb-12 shadow-2xl">
+                    <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden mb-8 shadow-2xl">
                         <Image
                             src={imageUrl}
                             alt={article.coverImage?.alternativeText || article.title}
@@ -197,6 +198,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         />
                     </div>
                 )}
+
+                {/* Audio Player */}
+                <TextToSpeech title={article.title} content={article.content} />
 
                 {/* Content */}
                 <div className="prose prose-lg prose-slate max-w-none mb-16">
