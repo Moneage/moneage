@@ -6,6 +6,13 @@ const config: Config = {
         "./components/**/*.{js,ts,jsx,tsx,mdx}",
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
+    safelist: [
+        'prose-sm',
+        'prose-base',
+        'prose-lg',
+        'prose-xl',
+        'prose-2xl',
+    ],
     theme: {
         extend: {},
     },

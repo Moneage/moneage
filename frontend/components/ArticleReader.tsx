@@ -8,16 +8,18 @@ interface ArticleReaderProps {
 }
 
 export default function ArticleReader({ children }: ArticleReaderProps) {
-    const [textSize, setTextSize] = useState<'prose-base' | 'prose-lg' | 'prose-xl'>('prose-lg');
+    const [textSize, setTextSize] = useState<'prose-base' | 'prose-lg' | 'prose-xl' | 'prose-2xl'>('prose-lg');
 
     const handleDecrease = () => {
-        if (textSize === 'prose-xl') setTextSize('prose-lg');
+        if (textSize === 'prose-2xl') setTextSize('prose-xl');
+        else if (textSize === 'prose-xl') setTextSize('prose-lg');
         else if (textSize === 'prose-lg') setTextSize('prose-base');
     };
 
     const handleIncrease = () => {
         if (textSize === 'prose-base') setTextSize('prose-lg');
         else if (textSize === 'prose-lg') setTextSize('prose-xl');
+        else if (textSize === 'prose-xl') setTextSize('prose-2xl');
     };
 
     return (
@@ -41,7 +43,7 @@ export default function ArticleReader({ children }: ArticleReaderProps) {
                     </div>
                     <button
                         onClick={handleIncrease}
-                        disabled={textSize === 'prose-xl'}
+                        disabled={textSize === 'prose-2xl'}
                         className="p-2 text-slate-600 hover:text-slate-900 hover:bg-white rounded-md transition-all disabled:opacity-30 disabled:hover:bg-transparent"
                         title="Increase text size"
                     >
