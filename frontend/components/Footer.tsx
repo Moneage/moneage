@@ -5,9 +5,9 @@ export default function Footer() {
     return (
         <footer className="bg-navy text-white mt-16">
             <div className="container mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
                     {/* Brand */}
-                    <div>
+                    <div className="col-span-2 md:col-span-1">
                         <h3 className="text-xl font-bold mb-4">Moneage</h3>
                         <p className="text-blue-100 text-sm leading-relaxed">
                             Your trusted source for expert financial analysis, market trends, and personal finance tips.
@@ -43,6 +43,33 @@ export default function Footer() {
                             <li>
                                 <Link href="/contact" className="hover:text-white transition-colors">
                                     Contact
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Financial Tools */}
+                    <div>
+                        <h4 className="font-semibold mb-4">Free Tools</h4>
+                        <ul className="space-y-2 text-blue-100 text-sm">
+                            <li>
+                                <Link href="/tools/sip-calculator" className="hover:text-white transition-colors">
+                                    SIP Calculator
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/tools/emi-calculator" className="hover:text-white transition-colors">
+                                    EMI Calculator
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/tools/compound-interest-calculator" className="hover:text-white transition-colors">
+                                    Compound Interest
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/tools" className="hover:text-white transition-colors font-semibold text-yellow-400">
+                                    View All Tools
                                 </Link>
                             </li>
                         </ul>
