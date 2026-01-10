@@ -25,7 +25,10 @@ export default function DonutChart({ data }: DonutChartProps) {
                         ))}
                     </Pie>
                     <Tooltip
-                        formatter={(value: number) => [`${value.toLocaleString()}`, 'Amount']}
+                        formatter={(value: number | string | Array<number | string> | undefined) => [
+                            typeof value === 'number' ? value.toLocaleString() : value,
+                            'Amount'
+                        ]}
                         contentStyle={{
                             backgroundColor: '#fff',
                             borderRadius: '8px',
