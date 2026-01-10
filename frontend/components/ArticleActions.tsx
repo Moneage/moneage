@@ -53,74 +53,58 @@ export default function ArticleActions({ articleTitle, articleUrl, articleSlug }
     };
 
     return (
-        <div className="flex items-center gap-2">
-            {/* Share Button */}
-            <div className="relative">
-                <button
-                    onClick={() => setShowShareMenu(!showShareMenu)}
-                    className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-                    title="Share"
-                >
-                    <Share2 className="w-5 h-5 text-slate-600" />
-                </button>
-
-                {/* Share Menu */}
-                {showShareMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-2 z-10">
-                        <button
-                            onClick={handleCopyLink}
-                            className="w-full px-4 py-2 text-left hover:bg-slate-50 flex items-center gap-3 text-sm"
-                        >
-                            {copied ? (
-                                <>
-                                    <Check className="w-4 h-4 text-green-600" />
-                                    <span className="text-green-600">Link copied!</span>
-                                </>
-                            ) : (
-                                <>
-                                    <LinkIcon className="w-4 h-4 text-slate-600" />
-                                    <span>Copy link</span>
-                                </>
-                            )}
-                        </button>
-
-                        <a
-                            href={shareLinks.facebook}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full px-4 py-2 hover:bg-slate-50 flex items-center gap-3 text-sm"
-                        >
-                            <Facebook className="w-4 h-4 text-blue-600" />
-                            <span>Share on Facebook</span>
-                        </a>
-
-                        <a
-                            href={shareLinks.twitter}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full px-4 py-2 hover:bg-slate-50 flex items-center gap-3 text-sm"
-                        >
-                            <Twitter className="w-4 h-4 text-sky-500" />
-                            <span>Share on X</span>
-                        </a>
-
-                        <a
-                            href={shareLinks.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full px-4 py-2 hover:bg-slate-50 flex items-center gap-3 text-sm"
-                        >
-                            <Linkedin className="w-4 h-4 text-blue-700" />
-                            <span>Share on LinkedIn</span>
-                        </a>
-                    </div>
+        <div className="flex items-center gap-3">
+            {/* Copy Link */}
+            <button
+                onClick={handleCopyLink}
+                className="p-2 hover:bg-slate-100 rounded-full transition-colors relative group"
+                title="Copy Link"
+            >
+                {copied ? (
+                    <Check className="w-5 h-5 text-green-600" />
+                ) : (
+                    <LinkIcon className="w-5 h-5 text-slate-500 group-hover:text-slate-800" />
                 )}
-            </div>
+            </button>
+
+            {/* Social Links */}
+            <a
+                href={shareLinks.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 hover:bg-sky-50 rounded-full transition-colors group"
+                title="Share on X (Twitter)"
+            >
+                <Twitter className="w-5 h-5 text-slate-500 group-hover:text-sky-500" />
+            </a>
+
+            <a
+                href={shareLinks.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 hover:bg-blue-50 rounded-full transition-colors group"
+                title="Share on Facebook"
+            >
+                <Facebook className="w-5 h-5 text-slate-500 group-hover:text-blue-600" />
+            </a>
+
+            <a
+                href={shareLinks.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 hover:bg-blue-50 rounded-full transition-colors group"
+                title="Share on LinkedIn"
+            >
+                <Linkedin className="w-5 h-5 text-slate-500 group-hover:text-blue-700" />
+            </a>
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-slate-200 mx-1"></div>
 
             {/* Bookmark Button */}
             <button
                 onClick={handleBookmark}
-                className={`p-2 rounded-lg transition-colors ${isBookmarked
+                className={`p-2 rounded-full transition-colors ${isBookmarked
                     ? 'bg-blue-100 hover:bg-blue-200'
                     : 'hover:bg-slate-100'
                     }`}
@@ -129,7 +113,7 @@ export default function ArticleActions({ articleTitle, articleUrl, articleSlug }
                 <Bookmark
                     className={`w-5 h-5 ${isBookmarked
                         ? 'text-blue-900 fill-blue-900'
-                        : 'text-slate-600'
+                        : 'text-slate-500 hover:text-slate-800'
                         }`}
                 />
             </button>
