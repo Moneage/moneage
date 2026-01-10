@@ -1,5 +1,7 @@
 "use client";
 
+import { getStrapiMedia } from '@/lib/api';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
