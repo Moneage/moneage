@@ -68,6 +68,11 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/tools/roi-calculator" className="hover:text-white transition-colors">
+                                    ROI Calculator
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/tools" className="hover:text-white transition-colors font-semibold text-yellow-400">
                                     View All Tools
                                 </Link>

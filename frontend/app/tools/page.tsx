@@ -30,6 +30,13 @@ export default function ToolsPage() {
             href: "/tools/compound-interest-calculator", // Placeholder for next step
             color: "bg-purple-50 border-purple-100"
         },
+        {
+            title: "ROI Calculator",
+            description: "Calculate the future value of your lumpsum investment.",
+            icon: <DollarSign className="w-8 h-8 text-yellow-600" />,
+            href: "/tools/roi-calculator",
+            color: "bg-yellow-50 border-yellow-100"
+        },
     ];
 
     return (

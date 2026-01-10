@@ -1,0 +1,31 @@
+{
+    "kind": "collectionType",
+    "collectionName": "tickers",
+    "info": {
+        "singularName": "ticker",
+        "pluralName": "tickers",
+        "displayName": "Ticker",
+        "description": "Stock market tickers for the ticker tape"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "symbol": {
+            "type": "string",
+            "required": true
+        },
+        "title": {
+            "type": "string",
+            "required": true
+        },
+        "isActive": {
+            "type": "boolean",
+            "default": true
+        },
+        "order": {
+            "type": "integer"
+        }
+    }
+}

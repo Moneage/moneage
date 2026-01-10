@@ -1,0 +1,56 @@
+{
+    "kind": "collectionType",
+    "collectionName": "advertisements",
+    "info": {
+        "singularName": "advertisement",
+        "pluralName": "advertisements",
+        "displayName": "Advertisement",
+        "description": "Ad management"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "title": {
+            "type": "string",
+            "required": true
+        },
+        "placement": {
+            "type": "enumeration",
+            "enum": [
+                "sidebar_top",
+                "article_bottom",
+                "banner_top"
+            ],
+            "required": true
+        },
+        "type": {
+            "type": "enumeration",
+            "enum": [
+                "image",
+                "code"
+            ],
+            "default": "image",
+            "required": true
+        },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "images"
+            ]
+        },
+        "destinationUrl": {
+            "type": "string"
+        },
+        "codeSnippet": {
+            "type": "text"
+        },
+        "isActive": {
+            "type": "boolean",
+            "default": true
+        }
+    }
+}

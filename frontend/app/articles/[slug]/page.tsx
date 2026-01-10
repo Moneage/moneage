@@ -14,6 +14,7 @@ import ArticleActions from '@/components/ArticleActions';
 import TextToSpeech from '@/components/TextToSpeech';
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
+import AdUnit from '@/components/AdUnit';
 
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -249,6 +250,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         <p className="text-slate-600">No content available.</p>
                     )}
                 </ArticleReader>
+
+                <AdUnit placement="article_bottom" className="mb-8" />
 
                 {/* Bottom Actions */}
                 <div className="flex items-center justify-between py-6 border-t border-b border-slate-200 mb-12">

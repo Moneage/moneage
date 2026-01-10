@@ -3,6 +3,8 @@ import HeroArticle from '@/components/HeroArticle';
 import MarketTicker from '@/components/MarketTicker';
 import SidebarArticleCard from '@/components/SidebarArticleCard';
 import ArticleCard from '@/components/ArticleCard';
+import NewsletterForm from '@/components/NewsletterForm';
+import AdUnit from '@/components/AdUnit';
 import { TrendingUp } from 'lucide-react';
 import { generateMetadata as generateMeta } from '@/lib/metadata';
 import type { Metadata } from 'next';
@@ -43,6 +45,7 @@ export default async function Home() {
 
             {/* Sidebar - 1/3 width */}
             <div className="lg:col-span-1">
+              <AdUnit placement="sidebar_top" className="mb-6" />
               <div className="bg-white border border-slate-200 rounded-xl p-6">
                 <h2 className="text-xl font-bold text-navy mb-4 pb-3 border-b border-slate-200">
                   Latest Articles
@@ -78,15 +81,8 @@ export default async function Home() {
             <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
               Subscribe to our newsletter and get the latest financial insights delivered straight to your inbox.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-6 py-3 rounded-lg bg-white text-slate-900 placeholder:text-slate-500 border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-              />
-              <button className="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-8 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap shadow-md hover:shadow-lg">
-                Subscribe Now
-              </button>
+            <div className="max-w-md mx-auto">
+              <NewsletterForm />
             </div>
           </section>
         </>
