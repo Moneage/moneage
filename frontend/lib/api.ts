@@ -127,3 +127,48 @@ export async function searchArticles(query: string) {
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', params);
 }
+
+export async function getTickers() {
+    const params = {
+        filters: {
+            isActive: true,
+        },
+        sort: ['order:asc'],
+    };
+    try {
+        const data = await fetchAPI<StrapiResponse<any[]>>('/tickers', params);
+        if (data.data && data.data.length > 0) {
+            return data.data;
+        }
+        return null;
+    } catch (error) {
+        console.error("Failed to fetch tickers:", error);
+        return null;
+    }
+}
+
+export async function getAds(placement: string) {
+    const params = {
+        filters: {
+            placement: {
+                $eq: placement
+            },
+            isActive: {
+                $eq: true
+            }
+        },
+        populate: ['image'],
+    };
+    try {
+        const data = await fetchAPI<StrapiResponse<any[]>>('/advertisements', params);
+        if (data.data && data.data.length > 0) {
+            // Return a random ad from the matching set
+            const randomIndex = Math.floor(Math.random() * data.data.length);
+            return data.data[randomIndex];
+        }
+        return null;
+    } catch (error) {
+        // console.error("Failed to fetch ads", error); // optional logging
+        return null;
+    }
+}
