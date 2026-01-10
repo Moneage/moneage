@@ -10,7 +10,15 @@ export default function EMICalculator() {
     const [loanAmount, setLoanAmount] = useState(5000000); // 50 Lakhs
     const [rate, setRate] = useState(8.5);
     const [years, setYears] = useState(20);
+    const [currency, setCurrency] = useState('₹');
     const [results, setResults] = useState({ emi: 0, totalPayable: 0, totalInterest: 0 });
+
+    const currencies = [
+        { label: 'INR (₹)', value: '₹' },
+        { label: 'USD ($)', value: '$' },
+        { label: 'EUR (€)', value: '€' },
+        { label: 'GBP (£)', value: '£' },
+    ];
 
     useEffect(() => {
         setResults(calculateEMI(loanAmount, rate, years));
@@ -32,11 +40,24 @@ export default function EMICalculator() {
             <div className="grid lg:grid-cols-2 gap-12 bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
                 {/* Inputs Section */}
                 <div>
-                    <div className="flex items-center gap-2 mb-8 pb-4 border-b border-slate-100">
-                        <div className="p-2 bg-green-100 rounded-lg text-green-600">
-                            <Landmark className="w-5 h-5" />
+                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+                        <div className="flex items-center gap-2">
+                            <div className="p-2 bg-green-100 rounded-lg text-green-600">
+                                <Landmark className="w-5 h-5" />
+                            </div>
+                            <h2 className="text-xl font-bold text-slate-800">Loan Details</h2>
                         </div>
-                        <h2 className="text-xl font-bold text-slate-800">Loan Details</h2>
+
+                        {/* Currency Selector */}
+                        <select
+                            value={currency}
+                            onChange={(e) => setCurrency(e.target.value)}
+                            className="bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        >
+                            {currencies.map(c => (
+                                <option key={c.value} value={c.value}>{c.label}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <CalculatorInput
@@ -46,7 +67,7 @@ export default function EMICalculator() {
                         min={100000}
                         max={10000000}
                         step={100000}
-                        prefix="₹"
+                        prefix={currency}
                     />
                     <CalculatorInput
                         label="Interest Rate (p.a)"
@@ -74,7 +95,7 @@ export default function EMICalculator() {
                         <div className="text-center mb-8">
                             <span className="text-slate-500 font-medium uppercase tracking-wider text-sm">Monthly EMI</span>
                             <div className="text-5xl font-extrabold text-slate-900 mt-2 flex items-center justify-center gap-1">
-                                <IndianRupee className="w-8 h-8 text-slate-400" />
+                                <span className="text-slate-400">{currency}</span>
                                 {results.emi.toLocaleString()}
                             </div>
                         </div>
@@ -82,11 +103,11 @@ export default function EMICalculator() {
                         <div className="grid grid-cols-2 gap-4 mb-8">
                             <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
                                 <span className="text-slate-500 text-xs font-bold uppercase">Total Interest</span>
-                                <div className="text-lg font-bold text-green-600">₹{results.totalInterest.toLocaleString()}</div>
+                                <div className="text-lg font-bold text-green-600">{currency}{results.totalInterest.toLocaleString()}</div>
                             </div>
                             <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-100">
                                 <span className="text-slate-500 text-xs font-bold uppercase">Total Payable</span>
-                                <div className="text-lg font-bold text-slate-700">₹{results.totalPayable.toLocaleString()}</div>
+                                <div className="text-lg font-bold text-slate-700">{currency}{results.totalPayable.toLocaleString()}</div>
                             </div>
                         </div>
                     </div>
