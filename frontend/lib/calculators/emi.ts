@@ -8,13 +8,12 @@ export function calculateEMI(principal: number, rate: number, years: number) {
         (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
         (Math.pow(1 + monthlyRate, months) - 1);
 
-    const totalAmount = emi * months;
-    const totalInterest = totalAmount - principal;
+    const totalPayable = emi * months;
+    const totalInterest = totalPayable - principal;
 
     return {
         emi: Math.round(emi),
-        totalAmount: Math.round(totalAmount),
+        totalPayable: Math.round(totalPayable),
         totalInterest: Math.round(totalInterest),
-        principal: Math.round(principal),
     };
 }
