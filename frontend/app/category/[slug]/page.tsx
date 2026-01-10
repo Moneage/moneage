@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 import StructuredData from '@/components/StructuredData';
 import { generateBreadcrumbSchema } from '@/lib/schema';
 
-export const revalidate = 0;
+export const revalidate = 300; // Revalidate every 5 minutes
 
 interface CategoryPageProps {
     params: Promise<{

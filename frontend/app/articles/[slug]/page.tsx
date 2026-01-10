@@ -11,7 +11,7 @@ import StructuredData from '@/components/StructuredData';
 import { generateArticleSchema, generateBreadcrumbSchema, generatePersonSchema } from '@/lib/schema';
 import ArticleActions from '@/components/ArticleActions';
 
-export const revalidate = 0;
+export const revalidate = 300; // Revalidate every 5 minutes
 
 interface ArticlePageProps {
     params: Promise<{

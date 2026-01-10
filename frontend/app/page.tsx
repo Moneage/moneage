@@ -6,7 +6,7 @@ import { TrendingUp } from 'lucide-react';
 import { generateMetadata as generateMeta } from '@/lib/metadata';
 import type { Metadata } from 'next';
 
-export const revalidate = 0;
+export const revalidate = 300; // Revalidate every 5 minutes
 
 export const metadata: Metadata = generateMeta({
   title: 'Moneage - Financial Insights & Market Analysis',
