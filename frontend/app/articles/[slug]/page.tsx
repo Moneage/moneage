@@ -193,6 +193,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                             fill
                             className="object-cover"
                             priority
+                            sizes="(max-width: 896px) 100vw, 896px"
                         />
                     </div>
                 )}

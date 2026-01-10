@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { getStrapiMedia } from '@/lib/api';
 import type { Article } from '@/types';
 
 interface SidebarArticleCardProps {
@@ -7,9 +8,7 @@ interface SidebarArticleCardProps {
 }
 
 export default function SidebarArticleCard({ article }: SidebarArticleCardProps) {
-    const imageUrl = article.coverImage?.url
-        ? `http://localhost:1337${article.coverImage.url}`
-        : null;
+    const imageUrl = getStrapiMedia(article.coverImage?.url || null);
 
     return (
         <Link href={`/articles/${article.slug}`} className="group block">
@@ -22,6 +21,7 @@ export default function SidebarArticleCard({ article }: SidebarArticleCardProps)
                             alt={article.title}
                             fill
                             className="object-cover"
+                            sizes="96px"
                         />
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center">

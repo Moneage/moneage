@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { User } from 'lucide-react';
+import { getStrapiMedia } from '@/lib/api';
 import type { Article } from '@/types';
 
 interface HeroArticleProps {
@@ -8,9 +9,7 @@ interface HeroArticleProps {
 }
 
 export default function HeroArticle({ article }: HeroArticleProps) {
-    const imageUrl = article.coverImage?.url
-        ? `http://localhost:1337${article.coverImage.url}`
-        : null;
+    const imageUrl = getStrapiMedia(article.coverImage?.url || null);
 
     return (
         <Link href={`/articles/${article.slug}`} className="group block">
@@ -23,6 +22,8 @@ export default function HeroArticle({ article }: HeroArticleProps) {
                             alt={article.title}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            priority
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 100vw"
                         />
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
