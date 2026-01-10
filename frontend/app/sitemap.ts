@@ -21,6 +21,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { path: '/privacy', priority: 0.5 },
         { path: '/terms', priority: 0.5 },
         { path: '/recents', priority: 0.9 },
+        { path: '/tools', priority: 0.7 },
+        { path: '/tools/sip-calculator', priority: 0.6 },
+        { path: '/tools/emi-calculator', priority: 0.6 },
+        { path: '/tools/roi-calculator', priority: 0.6 },
     ];
 
     staticPages.forEach(({ path, priority }) => {
