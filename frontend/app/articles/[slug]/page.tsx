@@ -12,6 +12,7 @@ import { generateArticleSchema, generateBreadcrumbSchema, generatePersonSchema, 
 import { parseFAQFromContent } from '@/lib/contentParser';
 import ArticleActions from '@/components/ArticleActions';
 import TextToSpeech from '@/components/TextToSpeech';
+import ReadNext from '@/components/ReadNext';
 
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -269,9 +270,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         </div>
                     </div>
                 )}
+
+                {/* Smart "Read Next" Section */}
+                {relatedArticles.length > 0 && <ReadNext articles={relatedArticles} />}
             </article>
 
-            {/* Related and Recent Articles */}
+            {/* Related and Recent Articles (Footer Grid) */}
             <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Related Articles from Same Category */}
                 {relatedArticles.length > 0 && (
