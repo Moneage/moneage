@@ -250,6 +250,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     )}
                 </ArticleReader>
 
+                {/* Bottom Actions */}
+                <div className="flex items-center justify-between py-6 border-t border-b border-slate-200 mb-12">
+                    <span className="font-semibold text-slate-900">Share this article:</span>
+                    <ArticleActions
+                        articleTitle={article.title}
+                        articleUrl={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/articles/${article.slug}`}
+                        articleSlug={article.slug}
+                    />
+                </div>
+
                 {/* Author Bio */}
                 {article.author && (
                     <div className="card p-8 bg-gradient-to-br from-slate-50 to-blue-50 border-blue-100 mb-12">
@@ -273,16 +283,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         </div>
                     </div>
                 )}
-
-                {/* Bottom Actions */}
-                <div className="flex items-center justify-between py-6 border-t border-b border-slate-200 mb-16">
-                    <span className="font-semibold text-slate-900">Share this article:</span>
-                    <ArticleActions
-                        articleTitle={article.title}
-                        articleUrl={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/articles/${article.slug}`}
-                        articleSlug={article.slug}
-                    />
-                </div>
 
                 {/* Smart "Read Next" Section */}
                 {relatedArticles.length > 0 && <ReadNext articles={relatedArticles} />}
