@@ -56,6 +56,9 @@ export default function ArticleReader({ children }: ArticleReaderProps) {
             <div className={`prose ${textSize} prose-slate max-w-none mb-16 transition-all duration-300`}>
                 {children}
             </div>
+
+            {/* Hidden div to force Tailwind to generate these classes (Safelist hack for v4) */}
+            <div className="hidden prose-sm prose-base prose-lg prose-xl prose-2xl"></div>
         </div>
     );
 }
