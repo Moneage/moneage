@@ -100,3 +100,30 @@ export async function getArticlesByCategory(slug: string) {
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', params);
 }
+
+export async function searchArticles(query: string) {
+    const params = {
+        filters: {
+            $or: [
+                {
+                    title: {
+                        $containsi: query,
+                    },
+                },
+                {
+                    description: {
+                        $containsi: query,
+                    },
+                },
+                {
+                    content: {
+                        $containsi: query,
+                    },
+                },
+            ],
+        },
+        populate: ['coverImage', 'category', 'author.avatar'],
+        sort: ['publishedAt:desc'],
+    };
+    return fetchAPI<StrapiResponse<Article[]>>('/articles', params);
+}

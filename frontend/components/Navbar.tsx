@@ -1,16 +1,20 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { TrendingUp, Search } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
+    const router = useRouter();
     const [searchQuery, setSearchQuery] = useState('');
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: Implement search functionality
-        console.log('Search query:', searchQuery);
+        if (searchQuery.trim()) {
+            router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+            setSearchQuery(''); // Optional: clear search after submit
+        }
     };
 
     return (
