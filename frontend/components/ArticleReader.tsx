@@ -65,3 +65,5 @@ export default function ArticleReader({ children }: ArticleReaderProps) {
         </div>
     );
 }
+
+// Force deployment
