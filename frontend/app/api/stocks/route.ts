@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const YAHOO_QUOTE_API = 'https://query1.finance.yahoo.com/v7/finance/quote';
+// Use v10 API which is more reliable
+const YAHOO_QUOTE_API = 'https://query2.finance.yahoo.com/v10/finance/quoteSummary';
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -14,29 +15,74 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const response = await fetch(`${YAHOO_QUOTE_API}?symbols=${symbols}`, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                'Accept': 'application/json',
-            },
-        });
+        const symbolList = symbols.split(',');
+        const results: any[] = [];
 
-        if (!response.ok) {
-            throw new Error(`Yahoo Finance API error: ${response.status}`);
+        // Fetch each symbol individually (more reliable than batch)
+        for (const symbol of symbolList) {
+            try {
+                const url = `${YAHOO_QUOTE_API}/${symbol}?modules=price,summaryDetail`;
+                const response = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept': '*/*',
+                        'Accept-Language': 'en-US,en;q=0.9',
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const quoteSummary = data.quoteSummary?.result?.[0];
+
+                    if (quoteSummary) {
+                        const price = quoteSummary.price;
+                        const summary = quoteSummary.summaryDetail;
+
+                        results.push({
+                            symbol: price.symbol,
+                            longName: price.longName,
+                            shortName: price.shortName,
+                            regularMarketPrice: price.regularMarketPrice?.raw || 0,
+                            regularMarketChange: price.regularMarketChange?.raw || 0,
+                            regularMarketChangePercent: price.regularMarketChangePercent?.raw || 0,
+                            regularMarketVolume: price.regularMarketVolume?.raw || 0,
+                            marketCap: price.marketCap?.raw || 0,
+                            trailingPE: summary?.trailingPE?.raw || null,
+                            forwardPE: summary?.forwardPE?.raw || null,
+                        });
+                    }
+                } else {
+                    console.error(`Failed to fetch ${symbol}: ${response.status}`);
+                }
+            } catch (err) {
+                console.error(`Error fetching ${symbol}:`, err);
+            }
         }
 
-        const data = await response.json();
-
-        return NextResponse.json(data, {
-            headers: {
-                'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        // Return in Yahoo Finance v7 format for compatibility
+        return NextResponse.json(
+            {
+                quoteResponse: {
+                    result: results,
+                    error: null,
+                },
             },
-        });
+            {
+                headers: {
+                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+                },
+            }
+        );
     } catch (error) {
         console.error('Error fetching stock data:', error);
         return NextResponse.json(
-            { error: 'Failed to fetch stock data' },
-            { status: 500 }
+            {
+                quoteResponse: {
+                    result: [],
+                    error: 'Failed to fetch stock data',
+                }
+            },
+            { status: 200 } // Return 200 with empty results instead of 500
         );
     }
 }
