@@ -75,16 +75,6 @@ export default async function Home() {
             </section>
           )}
 
-          {/* Newsletter CTA */}
-          <section className="bg-navy rounded-2xl p-8 md:p-12 text-center text-white shadow-xl">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Stay Ahead of the Market</h2>
-            <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
-              Subscribe to our newsletter and get the latest financial insights delivered straight to your inbox.
-            </p>
-            <div className="max-w-md mx-auto">
-              <NewsletterForm />
-            </div>
-          </section>
         </>
       ) : (
         /* Empty State */
