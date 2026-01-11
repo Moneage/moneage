@@ -53,7 +53,10 @@ export default function ArticleReader({ children }: ArticleReaderProps) {
             </div>
 
             {/* Content Display */}
-            <div className={`prose ${textSize} prose-slate max-w-none mb-16 transition-all duration-300`}>
+            <div className={`prose ${textSize} prose-slate max-w-none mb-16 transition-all duration-300 
+                prose-a:text-blue-600 prose-a:underline prose-a:decoration-blue-600/30 
+                hover:prose-a:text-blue-700 hover:prose-a:decoration-blue-700 
+                prose-a:transition-colors prose-a:font-medium`}>
                 {children}
             </div>
 
