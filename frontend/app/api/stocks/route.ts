@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import yahooFinance from 'yahoo-finance2';
 
-export const runtime = 'nodejs';
+// Twelve Data API - Free tier: 8 calls/min, 800 calls/day
+const TWELVE_DATA_API_KEY = process.env.TWELVE_DATA_API_KEY || 'demo';
+const TWELVE_DATA_API = 'https://api.twelvedata.com';
+
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
@@ -23,40 +26,56 @@ export async function GET(request: NextRequest) {
 
         console.log('[API] Fetching data for symbols:', symbolList);
 
-        // Fetch each symbol using yahoo-finance2
+        // Fetch each symbol using Twelve Data
         for (const symbol of symbolList) {
             try {
-                console.log(`[API] Attempting to fetch ${symbol}...`);
+                // Fetch quote and profile data
+                const quoteUrl = `${TWELVE_DATA_API}/quote?symbol=${symbol}&apikey=${TWELVE_DATA_API_KEY}`;
+                const profileUrl = `${TWELVE_DATA_API}/profile?symbol=${symbol}&apikey=${TWELVE_DATA_API_KEY}`;
 
-                // Fetch quote data with error handling
-                const quote: any = await yahooFinance.quote(symbol, {
-                    return: 'object'
-                });
+                const [quoteRes, profileRes] = await Promise.all([
+                    fetch(quoteUrl),
+                    fetch(profileUrl)
+                ]);
 
-                console.log(`[API] Raw response for ${symbol}:`, JSON.stringify(quote).substring(0, 200));
+                if (quoteRes.ok) {
+                    const quote = await quoteRes.json();
+                    let profile: any = {};
 
-                if (quote && quote.regularMarketPrice) {
-                    const stockData = {
-                        symbol: quote.symbol,
-                        longName: quote.longName || quote.shortName || quote.symbol,
-                        shortName: quote.shortName || quote.symbol,
-                        regularMarketPrice: quote.regularMarketPrice || 0,
-                        regularMarketChange: quote.regularMarketChange || 0,
-                        regularMarketChangePercent: quote.regularMarketChangePercent || 0,
-                        regularMarketVolume: quote.regularMarketVolume || 0,
-                        marketCap: quote.marketCap || 0,
-                        trailingPE: quote.trailingPE || null,
-                        forwardPE: quote.forwardPE || null,
-                    };
+                    if (profileRes.ok) {
+                        profile = await profileRes.json();
+                    }
 
-                    results.push(stockData);
-                    console.log('[API] ✓ Successfully fetched:', symbol, `($${stockData.regularMarketPrice})`);
+                    // Only add if we got valid data
+                    if (quote && quote.close && !quote.code) {
+                        const stockData = {
+                            symbol: quote.symbol || symbol,
+                            longName: profile.name || quote.name || symbol,
+                            shortName: profile.name || quote.name || symbol,
+                            regularMarketPrice: parseFloat(quote.close) || 0,
+                            regularMarketChange: parseFloat(quote.change) || 0,
+                            regularMarketChangePercent: parseFloat(quote.percent_change) || 0,
+                            regularMarketVolume: parseInt(quote.volume) || 0,
+                            marketCap: parseInt(profile.market_cap) || 0,
+                            trailingPE: parseFloat(profile.pe_ratio) || null,
+                            forwardPE: null,
+                        };
+
+                        results.push(stockData);
+                        console.log('[API] ✓ Successfully fetched:', symbol, `($${stockData.regularMarketPrice})`);
+                    } else {
+                        console.log('[API] ✗ No valid data for:', symbol, 'Error:', quote.code || quote.message);
+                    }
                 } else {
-                    console.log('[API] ✗ No valid data for:', symbol, 'regularMarketPrice:', quote?.regularMarketPrice);
+                    console.error(`[API] ✗ Failed to fetch ${symbol}: ${quoteRes.status}`);
                 }
             } catch (err: any) {
                 console.error(`[API] ✗ Error fetching ${symbol}:`, err.message || err);
             }
+
+            // Rate limiting: 8 calls/min = 7.5s per call (we make 2 calls per symbol)
+            // So wait 8 seconds between symbols
+            await new Promise(resolve => setTimeout(resolve, 8000));
         }
 
         console.log('[API] Final results count:', results.length, 'out of', symbolList.length);
@@ -71,7 +90,7 @@ export async function GET(request: NextRequest) {
             },
             {
                 headers: {
-                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+                    'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600', // 5 min cache
                     'Access-Control-Allow-Origin': '*',
                 },
             }
