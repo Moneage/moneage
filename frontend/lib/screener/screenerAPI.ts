@@ -1,22 +1,14 @@
 import { Stock, StockListItem } from './types';
 
-// Try alternative CORS proxy
-const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
-const YAHOO_QUOTE_API = 'https://query1.finance.yahoo.com/v7/finance/quote';
+// Use our own API route instead of external CORS proxy
+const STOCK_API = '/api/stocks';
 
 /**
- * Fetch stock data from Yahoo Finance Quote API
+ * Fetch stock data from our API route
  */
 export async function fetchStockData(symbol: string): Promise<Stock | null> {
     try {
-        const apiUrl = `${YAHOO_QUOTE_API}?symbols=${symbol}`;
-        const url = `${CORS_PROXY}${encodeURIComponent(apiUrl)}`;
-
-        const response = await fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-            },
-        });
+        const response = await fetch(`${STOCK_API}?symbols=${symbol}`);
 
         if (!response.ok) {
             console.error(`Failed to fetch ${symbol}: ${response.status}`);
@@ -58,22 +50,15 @@ export async function batchFetchStocks(
 ): Promise<Stock[]> {
     const stocks: Stock[] = [];
 
-    // Fetch in batches of 5 to avoid overwhelming the proxy
-    const batchSize = 5;
+    // Fetch in batches of 10 (our API can handle it)
+    const batchSize = 10;
     for (let i = 0; i < stockList.length; i += batchSize) {
         const batch = stockList.slice(i, i + batchSize);
 
-        // Fetch batch as a single request (more efficient)
+        // Fetch batch as a single request
         const symbols = batch.map(item => item.symbol).join(',');
         try {
-            const apiUrl = `${YAHOO_QUOTE_API}?symbols=${symbols}`;
-            const url = `${CORS_PROXY}${encodeURIComponent(apiUrl)}`;
-
-            const response = await fetch(url, {
-                headers: {
-                    'Accept': 'application/json',
-                },
-            });
+            const response = await fetch(`${STOCK_API}?symbols=${symbols}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -103,9 +88,9 @@ export async function batchFetchStocks(
             console.error(`Error fetching batch:`, error);
         }
 
-        // Longer delay between batches to avoid rate limiting
+        // Small delay between batches
         if (i + batchSize < stockList.length) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 500));
         }
     }
 
@@ -119,20 +104,13 @@ export async function refreshStockPrices(stocks: Stock[]): Promise<Stock[]> {
     const refreshed: Stock[] = [];
 
     // Refresh in batches
-    const batchSize = 5;
+    const batchSize = 10;
     for (let i = 0; i < stocks.length; i += batchSize) {
         const batch = stocks.slice(i, i + batchSize);
         const symbols = batch.map(s => s.symbol).join(',');
 
         try {
-            const apiUrl = `${YAHOO_QUOTE_API}?symbols=${symbols}`;
-            const url = `${CORS_PROXY}${encodeURIComponent(apiUrl)}`;
-
-            const response = await fetch(url, {
-                headers: {
-                    'Accept': 'application/json',
-                },
-            });
+            const response = await fetch(`${STOCK_API}?symbols=${symbols}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -163,7 +141,7 @@ export async function refreshStockPrices(stocks: Stock[]): Promise<Stock[]> {
         }
 
         if (i + batchSize < stocks.length) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 500));
         }
     }
 
