@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         for (const symbol of symbolList) {
             try {
                 // Fetch quote data
-                const quote = await yahooFinance.quote(symbol);
+                const quote: any = await yahooFinance.quote(symbol);
 
                 if (quote && quote.regularMarketPrice) {
                     const stockData = {
