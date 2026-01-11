@@ -73,6 +73,11 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/tools/portfolio" className="hover:text-white transition-colors">
+                                    Portfolio Tracker
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/tools" className="hover:text-white transition-colors font-semibold text-yellow-400">
                                     View All Tools
                                 </Link>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Calculator, TrendingUp, Landmark, Percent, DollarSign } from 'lucide-react';
+import { Calculator, TrendingUp, Landmark, Percent, DollarSign, PieChart } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -36,6 +36,13 @@ export default function ToolsPage() {
             icon: <DollarSign className="w-8 h-8 text-yellow-600" />,
             href: "/tools/roi-calculator",
             color: "bg-yellow-50 border-yellow-100"
+        },
+        {
+            title: "Stock Portfolio Tracker",
+            description: "Track your US stock investments and monitor performance.",
+            icon: <PieChart className="w-8 h-8 text-indigo-600" />,
+            href: "/tools/portfolio",
+            color: "bg-indigo-50 border-indigo-100"
         },
     ];
 
