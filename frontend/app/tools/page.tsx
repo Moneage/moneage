@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Calculator, TrendingUp, Landmark, Percent, DollarSign, PieChart } from 'lucide-react';
+import { Calculator, TrendingUp, Landmark, Percent, DollarSign, PieChart, Filter } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -43,6 +43,13 @@ export default function ToolsPage() {
             icon: <PieChart className="w-8 h-8 text-indigo-600" />,
             href: "/tools/portfolio",
             color: "bg-indigo-50 border-indigo-100"
+        },
+        {
+            title: "Stock Screener",
+            description: "Filter and analyze stocks by market cap, P/E ratio, and more.",
+            icon: <Filter className="w-8 h-8 text-teal-600" />,
+            href: "/tools/screener",
+            color: "bg-teal-50 border-teal-100"
         },
     ];
 

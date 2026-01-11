@@ -28,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { path: '/tools/roi-calculator', priority: 0.6 },
         { path: '/tools/compound-interest-calculator', priority: 0.6 },
         { path: '/tools/portfolio', priority: 0.6 },
+        { path: '/tools/screener', priority: 0.7 },
     ];
 
     staticPages.forEach(({ path, priority }) => {
