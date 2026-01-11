@@ -3,7 +3,6 @@ import HeroArticle from '@/components/HeroArticle';
 import MarketTicker from '@/components/MarketTicker';
 import SidebarArticleCard from '@/components/SidebarArticleCard';
 import ArticleCard from '@/components/ArticleCard';
-import NewsletterForm from '@/components/NewsletterForm';
 import AdUnit from '@/components/AdUnit';
 import { TrendingUp } from 'lucide-react';
 import { generateMetadata as generateMeta } from '@/lib/metadata';
@@ -19,11 +18,16 @@ export const metadata: Metadata = generateMeta({
 
 export default async function Home() {
   let articles: any[] = [];
+  let error: string | null = null;
+
   try {
     const data = await getArticles();
+    console.log('Homepage - Articles data:', JSON.stringify(data, null, 2));
     articles = data?.data || [];
-  } catch (error) {
-    console.error("Failed to fetch articles", error);
+    console.log('Homepage - Articles count:', articles.length);
+  } catch (err) {
+    console.error("Failed to fetch articles", err);
+    error = err instanceof Error ? err.message : 'Unknown error';
   }
 
   // Split articles for different sections
@@ -34,6 +38,15 @@ export default async function Home() {
   return (
     <div className="space-y-12">
       <MarketTicker />
+
+      {/* Debug info - remove after fixing */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="bg-yellow-50 border border-yellow-200 p-4 rounded">
+          <p><strong>Debug:</strong> Articles count: {articles.length}</p>
+          {error && <p className="text-red-600">Error: {error}</p>}
+        </div>
+      )}
+
       {articles.length > 0 ? (
         <>
           {/* Hero Section with Sidebar */}
@@ -84,7 +97,8 @@ export default async function Home() {
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-2">No Articles Yet</h3>
           <p className="text-slate-600 mb-6">Start creating content in your Strapi admin panel.</p>
-          <a href="http://localhost:1337/admin" target="_blank" rel="noopener noreferrer" className="bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 shadow-md hover:shadow-lg inline-block">
+          {error && <p className="text-red-600 text-sm mb-4">Error: {error}</p>}
+          <a href={process.env.NEXT_PUBLIC_STRAPI_URL + '/admin'} target="_blank" rel="noopener noreferrer" className="bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 shadow-md hover:shadow-lg inline-block">
             Go to Admin Panel
           </a>
         </div>
