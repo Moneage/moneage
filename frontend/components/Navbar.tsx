@@ -46,13 +46,6 @@ export default function Navbar() {
                             />
                         </div>
                     </form>
-
-                    {/* Subscribe Button */}
-                    <div className="hidden lg:block">
-                        <button className="bg-navy text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 shadow-md hover:shadow-lg">
-                            Subscribe
-                        </button>
-                    </div>
                 </div>
 
                 {/* Navigation Links */}
