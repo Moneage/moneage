@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import yahooFinance from 'yahoo-finance2';
 
-// Finnhub API - Free tier: 60 API calls/minute
-const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY || 'demo'; // Use demo key for testing
-const FINNHUB_API = 'https://finnhub.io/api/v1';
-
-export const runtime = 'edge';
+export const runtime = 'nodejs'; // yahoo-finance2 requires Node.js runtime
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
@@ -26,49 +23,34 @@ export async function GET(request: NextRequest) {
 
         console.log('[API] Fetching data for symbols:', symbolList);
 
-        // Fetch each symbol from Finnhub
+        // Fetch each symbol using yahoo-finance2
         for (const symbol of symbolList) {
             try {
                 // Fetch quote data
-                const quoteUrl = `${FINNHUB_API}/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
-                const profileUrl = `${FINNHUB_API}/stock/profile2?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+                const quote = await yahooFinance.quote(symbol);
 
-                const [quoteRes, profileRes] = await Promise.all([
-                    fetch(quoteUrl),
-                    fetch(profileUrl)
-                ]);
+                if (quote && quote.regularMarketPrice) {
+                    const stockData = {
+                        symbol: quote.symbol,
+                        longName: quote.longName || quote.shortName || quote.symbol,
+                        shortName: quote.shortName || quote.symbol,
+                        regularMarketPrice: quote.regularMarketPrice || 0,
+                        regularMarketChange: quote.regularMarketChange || 0,
+                        regularMarketChangePercent: quote.regularMarketChangePercent || 0,
+                        regularMarketVolume: quote.regularMarketVolume || 0,
+                        marketCap: quote.marketCap || 0,
+                        trailingPE: quote.trailingPE || null,
+                        forwardPE: quote.forwardPE || null,
+                    };
 
-                if (quoteRes.ok && profileRes.ok) {
-                    const quote = await quoteRes.json();
-                    const profile = await profileRes.json();
-
-                    // Only add if we got valid data
-                    if (quote.c && quote.c > 0) {
-                        const stockData = {
-                            symbol: symbol,
-                            longName: profile.name || symbol,
-                            shortName: profile.name || symbol,
-                            regularMarketPrice: quote.c, // Current price
-                            regularMarketChange: quote.d, // Change
-                            regularMarketChangePercent: quote.dp, // Change percent
-                            regularMarketVolume: 0, // Finnhub doesn't provide volume in quote
-                            marketCap: profile.marketCapitalization ? profile.marketCapitalization * 1000000 : 0, // Convert from millions
-                            trailingPE: profile.finnhubIndustry ? null : null, // PE not in free tier
-                            forwardPE: null,
-                        };
-
-                        results.push(stockData);
-                        console.log('[API] Successfully fetched:', symbol);
-                    }
+                    results.push(stockData);
+                    console.log('[API] Successfully fetched:', symbol, `($${stockData.regularMarketPrice})`);
                 } else {
-                    console.error(`[API] Failed to fetch ${symbol}: quote ${quoteRes.status}, profile ${profileRes.status}`);
+                    console.log('[API] No data for:', symbol);
                 }
             } catch (err) {
                 console.error(`[API] Error fetching ${symbol}:`, err);
             }
-
-            // Small delay to respect rate limits (60/min = 1 per second)
-            await new Promise(resolve => setTimeout(resolve, 1100));
         }
 
         console.log('[API] Returning', results.length, 'results');
@@ -83,7 +65,7 @@ export async function GET(request: NextRequest) {
             },
             {
                 headers: {
-                    'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600', // 5 min cache
+                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
                     'Access-Control-Allow-Origin': '*',
                 },
             }
