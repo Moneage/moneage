@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import yahooFinance from 'yahoo-finance2';
 
-export const runtime = 'nodejs'; // yahoo-finance2 requires Node.js runtime
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
@@ -26,8 +26,14 @@ export async function GET(request: NextRequest) {
         // Fetch each symbol using yahoo-finance2
         for (const symbol of symbolList) {
             try {
-                // Fetch quote data
-                const quote: any = await yahooFinance.quote(symbol);
+                console.log(`[API] Attempting to fetch ${symbol}...`);
+
+                // Fetch quote data with error handling
+                const quote: any = await yahooFinance.quote(symbol, {
+                    return: 'object'
+                });
+
+                console.log(`[API] Raw response for ${symbol}:`, JSON.stringify(quote).substring(0, 200));
 
                 if (quote && quote.regularMarketPrice) {
                     const stockData = {
@@ -44,16 +50,16 @@ export async function GET(request: NextRequest) {
                     };
 
                     results.push(stockData);
-                    console.log('[API] Successfully fetched:', symbol, `($${stockData.regularMarketPrice})`);
+                    console.log('[API] ✓ Successfully fetched:', symbol, `($${stockData.regularMarketPrice})`);
                 } else {
-                    console.log('[API] No data for:', symbol);
+                    console.log('[API] ✗ No valid data for:', symbol, 'regularMarketPrice:', quote?.regularMarketPrice);
                 }
-            } catch (err) {
-                console.error(`[API] Error fetching ${symbol}:`, err);
+            } catch (err: any) {
+                console.error(`[API] ✗ Error fetching ${symbol}:`, err.message || err);
             }
         }
 
-        console.log('[API] Returning', results.length, 'results');
+        console.log('[API] Final results count:', results.length, 'out of', symbolList.length);
 
         // Return in Yahoo Finance v7 format for compatibility
         return NextResponse.json(
@@ -70,13 +76,13 @@ export async function GET(request: NextRequest) {
                 },
             }
         );
-    } catch (error) {
-        console.error('[API] Error fetching stock data:', error);
+    } catch (error: any) {
+        console.error('[API] Fatal error fetching stock data:', error.message || error);
         return NextResponse.json(
             {
                 quoteResponse: {
                     result: [],
-                    error: 'Failed to fetch stock data',
+                    error: error.message || 'Failed to fetch stock data',
                 },
             },
             {
