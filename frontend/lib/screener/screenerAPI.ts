@@ -1,10 +1,10 @@
 import { Stock, StockListItem } from './types';
 
-// Use our own API route
+// Use our own API route (now using yahoo-finance2)
 const STOCK_API = '/api/stocks';
 
 /**
- * Fetch stock data from our API route (now using Finnhub)
+ * Fetch stock data from our API route
  */
 export async function fetchStockData(symbol: string): Promise<Stock | null> {
     try {
@@ -51,9 +51,9 @@ export async function batchFetchStocks(
     const stocks: Stock[] = [];
     let successCount = 0;
 
-    console.log(`[Screener] Fetching ${stockList.length} stocks from Finnhub API...`);
+    console.log(`[Screener] Fetching ${stockList.length} stocks from Yahoo Finance...`);
 
-    // Fetch in batches of 10 (Finnhub allows 60/min)
+    // Fetch in batches of 10
     const batchSize = 10;
     for (let i = 0; i < stockList.length; i += batchSize) {
         const batch = stockList.slice(i, i + batchSize);
@@ -101,7 +101,7 @@ export async function batchFetchStocks(
         }
     }
 
-    console.log(`[Screener] Successfully fetched ${successCount} of ${stockList.length} stocks from Finnhub`);
+    console.log(`[Screener] Successfully fetched ${successCount} of ${stockList.length} stocks`);
 
     return stocks;
 }
