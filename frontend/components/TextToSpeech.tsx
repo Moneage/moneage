@@ -12,31 +12,21 @@ export default function TextToSpeech({ title, content }: TextToSpeechProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [supported, setSupported] = useState(false);
-    const [voicesLoaded, setVoicesLoaded] = useState(false);
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-    const isInitializingRef = useRef(false);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
             setSupported(true);
-
-            // Load voices
-            const loadVoices = () => {
-                const voices = window.speechSynthesis.getVoices();
-                if (voices.length > 0) {
-                    setVoicesLoaded(true);
-                }
-            };
-
-            // Voices might load asynchronously
-            loadVoices();
-            window.speechSynthesis.onvoiceschanged = loadVoices;
         }
 
         // Cleanup on unmount
         return () => {
             if (typeof window !== 'undefined' && window.speechSynthesis) {
-                window.speechSynthesis.cancel();
+                try {
+                    window.speechSynthesis.cancel();
+                } catch (e) {
+                    // Ignore cleanup errors
+                }
             }
         };
     }, []);
@@ -68,67 +58,36 @@ export default function TextToSpeech({ title, content }: TextToSpeechProps) {
         return text.trim();
     };
 
-    const handlePlay = async () => {
-        if (!supported || isInitializingRef.current) return;
-
+    const speak = () => {
         try {
-            // Resume if paused
-            if (isPaused && window.speechSynthesis.paused) {
-                window.speechSynthesis.resume();
-                setIsPaused(false);
-                setIsPlaying(true);
-                return;
-            }
-
-            // Pause if playing
-            if (isPlaying && window.speechSynthesis.speaking) {
-                window.speechSynthesis.pause();
-                setIsPaused(true);
-                setIsPlaying(false);
-                return;
-            }
-
-            // Start new speech
-            isInitializingRef.current = true;
-
             const text = getPlainText();
             if (!text || text.length === 0) {
                 console.error('No text to speak');
-                isInitializingRef.current = false;
                 return;
             }
 
-            // Cancel any existing speech and wait for it to clear
-            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-                window.speechSynthesis.cancel();
-                // Wait for cancel to complete
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-
+            // Create utterance
             const utterance = new SpeechSynthesisUtterance(text);
 
-            // Configure voice
-            if (voicesLoaded) {
-                const voices = window.speechSynthesis.getVoices();
-                const preferredVoice = voices.find(v =>
-                    v.lang.startsWith('en') &&
-                    (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))
-                ) || voices.find(v => v.lang.startsWith('en'));
-
-                if (preferredVoice) {
-                    utterance.voice = preferredVoice;
+            // Get voices and select one
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                // Prefer English voices
+                const englishVoice = voices.find(v => v.lang.startsWith('en'));
+                if (englishVoice) {
+                    utterance.voice = englishVoice;
                 }
             }
 
             utterance.rate = 1.0;
             utterance.pitch = 1.0;
             utterance.volume = 1.0;
+            utterance.lang = 'en-US';
 
             utterance.onstart = () => {
-                console.log('Speech started');
+                console.log('Speech started successfully');
                 setIsPlaying(true);
                 setIsPaused(false);
-                isInitializingRef.current = false;
             };
 
             utterance.onend = () => {
@@ -136,31 +95,78 @@ export default function TextToSpeech({ title, content }: TextToSpeechProps) {
                 setIsPlaying(false);
                 setIsPaused(false);
                 utteranceRef.current = null;
-                isInitializingRef.current = false;
             };
 
             utterance.onerror = (event) => {
-                console.error('Speech synthesis error:', event.error);
-                // Don't treat "interrupted" as a real error if we're stopping
-                if (event.error !== 'interrupted' || !window.speechSynthesis.speaking) {
-                    setIsPlaying(false);
-                    setIsPaused(false);
-                    utteranceRef.current = null;
-                }
-                isInitializingRef.current = false;
+                console.error('Speech error:', event.error, event);
+                // Reset state on error
+                setIsPlaying(false);
+                setIsPaused(false);
+                utteranceRef.current = null;
+            };
+
+            utterance.onpause = () => {
+                console.log('Speech paused');
+                setIsPaused(true);
+                setIsPlaying(false);
+            };
+
+            utterance.onresume = () => {
+                console.log('Speech resumed');
+                setIsPaused(false);
+                setIsPlaying(true);
             };
 
             utteranceRef.current = utterance;
-
-            // Small delay before speaking to avoid race conditions
-            await new Promise(resolve => setTimeout(resolve, 50));
             window.speechSynthesis.speak(utterance);
+            console.log('Speak command issued');
+
+        } catch (error) {
+            console.error('Error in speak:', error);
+            setIsPlaying(false);
+            setIsPaused(false);
+        }
+    };
+
+    const handlePlay = () => {
+        if (!supported) {
+            console.error('Speech synthesis not supported');
+            return;
+        }
+
+        try {
+            // If paused, resume
+            if (isPaused) {
+                console.log('Resuming speech');
+                window.speechSynthesis.resume();
+                return;
+            }
+
+            // If playing, pause
+            if (isPlaying) {
+                console.log('Pausing speech');
+                window.speechSynthesis.pause();
+                return;
+            }
+
+            // Start new speech
+            console.log('Starting new speech');
+
+            // Cancel any existing speech first
+            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+                console.log('Cancelling existing speech');
+                window.speechSynthesis.cancel();
+            }
+
+            // Use setTimeout to ensure cancel completes
+            setTimeout(() => {
+                speak();
+            }, 200);
 
         } catch (error) {
             console.error('Error in handlePlay:', error);
             setIsPlaying(false);
             setIsPaused(false);
-            isInitializingRef.current = false;
         }
     };
 
@@ -168,11 +174,11 @@ export default function TextToSpeech({ title, content }: TextToSpeechProps) {
         if (!supported) return;
 
         try {
+            console.log('Stopping speech');
             window.speechSynthesis.cancel();
             setIsPlaying(false);
             setIsPaused(false);
             utteranceRef.current = null;
-            isInitializingRef.current = false;
         } catch (error) {
             console.error('Error in handleStop:', error);
         }
@@ -189,8 +195,7 @@ export default function TextToSpeech({ title, content }: TextToSpeechProps) {
 
             <button
                 onClick={handlePlay}
-                disabled={isInitializingRef.current}
-                className="p-2 rounded-full bg-white text-blue-900 hover:bg-blue-100 hover:text-blue-700 transition-colors shadow-sm border border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-2 rounded-full bg-white text-blue-900 hover:bg-blue-100 hover:text-blue-700 transition-colors shadow-sm border border-blue-100"
                 aria-label={isPaused ? "Resume" : isPlaying ? "Pause" : "Play"}
                 title={isPaused ? "Resume" : isPlaying ? "Pause" : "Play"}
             >
