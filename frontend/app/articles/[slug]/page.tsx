@@ -222,6 +222,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                                 return (
                                     <p key={index} className="mb-6 text-slate-700 leading-relaxed">
                                         {block.children.map((child: any, childIndex: number) => {
+                                            // Handle links
+                                            if (child.type === 'link') {
+                                                return (
+                                                    <a
+                                                        key={childIndex}
+                                                        href={child.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-blue-600 underline hover:text-blue-700"
+                                                    >
+                                                        {child.children?.map((linkChild: any) => linkChild.text).join('')}
+                                                    </a>
+                                                );
+                                            }
+                                            // Handle text with formatting
                                             if (child.text) {
                                                 let text = child.text;
                                                 if (child.bold) return <strong key={childIndex} className="font-bold text-slate-900">{text}</strong>;
