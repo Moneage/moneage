@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
 import { getArticles, getCategories } from '@/lib/api';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+// Always use production URL for sitemap
+const SITE_URL = 'https://moneage.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemap: MetadataRoute.Sitemap = [];
@@ -25,6 +26,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { path: '/tools/sip-calculator', priority: 0.6 },
         { path: '/tools/emi-calculator', priority: 0.6 },
         { path: '/tools/roi-calculator', priority: 0.6 },
+        { path: '/tools/compound-interest-calculator', priority: 0.6 },
+        { path: '/tools/portfolio', priority: 0.6 },
     ];
 
     staticPages.forEach(({ path, priority }) => {
