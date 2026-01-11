@@ -1,5 +1,7 @@
 import { StockInfo } from './types';
 
+// Using a CORS proxy for Yahoo Finance API
+const CORS_PROXY = 'https://corsproxy.io/?';
 const YAHOO_FINANCE_API = 'https://query1.finance.yahoo.com/v8/finance/chart';
 
 /**
@@ -7,7 +9,8 @@ const YAHOO_FINANCE_API = 'https://query1.finance.yahoo.com/v8/finance/chart';
  */
 export async function getStockInfo(symbol: string): Promise<StockInfo> {
     try {
-        const response = await fetch(`${YAHOO_FINANCE_API}/${symbol.toUpperCase()}`);
+        const url = `${CORS_PROXY}${encodeURIComponent(YAHOO_FINANCE_API)}/${symbol.toUpperCase()}`;
+        const response = await fetch(url);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch stock data for ${symbol}`);
@@ -15,21 +18,25 @@ export async function getStockInfo(symbol: string): Promise<StockInfo> {
 
         const data = await response.json();
 
-        if (data.chart.error) {
+        if (data.chart?.error) {
             throw new Error(data.chart.error.description || 'Invalid stock symbol');
+        }
+
+        if (!data.chart?.result || data.chart.result.length === 0) {
+            throw new Error('Invalid stock symbol or no data available');
         }
 
         const result = data.chart.result[0];
         const meta = result.meta;
-        const quote = result.indicators.quote[0];
+        const quote = result.indicators?.quote?.[0] || {};
 
         return {
             symbol: meta.symbol,
-            name: meta.longName || meta.symbol,
-            price: meta.regularMarketPrice || meta.previousClose,
-            previousClose: meta.previousClose,
-            dayHigh: quote.high?.[quote.high.length - 1] || meta.regularMarketPrice,
-            dayLow: quote.low?.[quote.low.length - 1] || meta.regularMarketPrice,
+            name: meta.longName || meta.shortName || meta.symbol,
+            price: meta.regularMarketPrice || meta.previousClose || 0,
+            previousClose: meta.previousClose || 0,
+            dayHigh: quote.high?.[quote.high.length - 1] || meta.regularMarketPrice || 0,
+            dayLow: quote.low?.[quote.low.length - 1] || meta.regularMarketPrice || 0,
             volume: quote.volume?.[quote.volume.length - 1] || 0,
             marketCap: meta.marketCap,
         };
