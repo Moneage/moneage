@@ -7,7 +7,7 @@ import DonutChart from '@/components/calculators/DonutChart';
 import { Landmark, TrendingUp, IndianRupee } from 'lucide-react';
 
 export default function EMICalculator() {
-    const [loanAmount, setLoanAmount] = useState(5000000); // 50 Lakhs
+    const [loanAmount, setLoanAmount] = useState(50000); // Default $50,000
     const [rate, setRate] = useState(8.5);
     const [years, setYears] = useState(20);
     const [currency, setCurrency] = useState('$');
@@ -64,9 +64,9 @@ export default function EMICalculator() {
                         label="Loan Amount"
                         value={loanAmount}
                         onChange={setLoanAmount}
-                        min={100000}
+                        min={500}
                         max={10000000}
-                        step={100000}
+                        step={100}
                         prefix={currency}
                     />
                     <CalculatorInput
