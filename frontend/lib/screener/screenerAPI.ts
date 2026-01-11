@@ -1,6 +1,7 @@
 import { Stock, StockListItem } from './types';
 
-const CORS_PROXY = 'https://corsproxy.io/?';
+// Try alternative CORS proxy
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
 const YAHOO_QUOTE_API = 'https://query1.finance.yahoo.com/v7/finance/quote';
 
 /**
@@ -8,11 +9,17 @@ const YAHOO_QUOTE_API = 'https://query1.finance.yahoo.com/v7/finance/quote';
  */
 export async function fetchStockData(symbol: string): Promise<Stock | null> {
     try {
-        const url = `${CORS_PROXY}${encodeURIComponent(`${YAHOO_QUOTE_API}?symbols=${symbol}`)}`;
-        const response = await fetch(url);
+        const apiUrl = `${YAHOO_QUOTE_API}?symbols=${symbol}`;
+        const url = `${CORS_PROXY}${encodeURIComponent(apiUrl)}`;
+
+        const response = await fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
 
         if (!response.ok) {
-            console.error(`Failed to fetch ${symbol}`);
+            console.error(`Failed to fetch ${symbol}: ${response.status}`);
             return null;
         }
 
@@ -51,16 +58,22 @@ export async function batchFetchStocks(
 ): Promise<Stock[]> {
     const stocks: Stock[] = [];
 
-    // Fetch in batches of 10 to avoid overwhelming the API
-    const batchSize = 10;
+    // Fetch in batches of 5 to avoid overwhelming the proxy
+    const batchSize = 5;
     for (let i = 0; i < stockList.length; i += batchSize) {
         const batch = stockList.slice(i, i + batchSize);
 
         // Fetch batch as a single request (more efficient)
         const symbols = batch.map(item => item.symbol).join(',');
         try {
-            const url = `${CORS_PROXY}${encodeURIComponent(`${YAHOO_QUOTE_API}?symbols=${symbols}`)}`;
-            const response = await fetch(url);
+            const apiUrl = `${YAHOO_QUOTE_API}?symbols=${symbols}`;
+            const url = `${CORS_PROXY}${encodeURIComponent(apiUrl)}`;
+
+            const response = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
 
             if (response.ok) {
                 const data = await response.json();
@@ -83,14 +96,16 @@ export async function batchFetchStocks(
                         });
                     }
                 });
+            } else {
+                console.error(`Batch fetch failed: ${response.status}`);
             }
         } catch (error) {
             console.error(`Error fetching batch:`, error);
         }
 
-        // Small delay between batches to be nice to the API
+        // Longer delay between batches to avoid rate limiting
         if (i + batchSize < stockList.length) {
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
         }
     }
 
@@ -103,15 +118,52 @@ export async function batchFetchStocks(
 export async function refreshStockPrices(stocks: Stock[]): Promise<Stock[]> {
     const refreshed: Stock[] = [];
 
-    for (const stock of stocks) {
-        const updated = await fetchStockData(stock.symbol);
-        if (updated) {
-            updated.name = stock.name;
-            updated.sector = stock.sector;
-            refreshed.push(updated);
-        } else {
+    // Refresh in batches
+    const batchSize = 5;
+    for (let i = 0; i < stocks.length; i += batchSize) {
+        const batch = stocks.slice(i, i + batchSize);
+        const symbols = batch.map(s => s.symbol).join(',');
+
+        try {
+            const apiUrl = `${YAHOO_QUOTE_API}?symbols=${symbols}`;
+            const url = `${CORS_PROXY}${encodeURIComponent(apiUrl)}`;
+
+            const response = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const quotes = data.quoteResponse?.result || [];
+
+                batch.forEach(stock => {
+                    const quote = quotes.find((q: any) => q.symbol === stock.symbol);
+                    if (quote) {
+                        refreshed.push({
+                            ...stock,
+                            price: quote.regularMarketPrice || stock.price,
+                            change: quote.regularMarketChange || stock.change,
+                            changePercent: quote.regularMarketChangePercent || stock.changePercent,
+                            volume: quote.regularMarketVolume || stock.volume,
+                            marketCap: quote.marketCap || stock.marketCap,
+                            peRatio: quote.trailingPE || stock.peRatio,
+                            lastUpdated: new Date().toISOString(),
+                        });
+                    } else {
+                        refreshed.push(stock);
+                    }
+                });
+            }
+        } catch (error) {
+            console.error(`Error refreshing batch:`, error);
             // Keep old data if fetch fails
-            refreshed.push(stock);
+            refreshed.push(...batch);
+        }
+
+        if (i + batchSize < stocks.length) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
         }
     }
 
