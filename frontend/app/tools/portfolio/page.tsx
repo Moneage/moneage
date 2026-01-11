@@ -51,58 +51,54 @@ export default function PortfolioPage() {
     const metrics = calculateTotalPortfolioValue(holdings);
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12">
+        <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                <div className="mb-6">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-1">
                         Stock Portfolio Tracker
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 text-sm">
                         Track your US stock investments and monitor performance in real-time
                     </p>
                 </div>
 
-                {/* Info Banner */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8 flex items-start gap-3">
-                    <AlertCircle className="text-blue-600 flex-shrink-0 mt-0.5" size={20} />
-                    <div className="text-sm text-blue-800">
-                        <p className="font-medium mb-1">Your data is stored locally</p>
-                        <p>
-                            All portfolio data is saved in your browser's localStorage. Make sure to export your
-                            portfolio regularly to avoid data loss. Data is not synced across devices.
-                        </p>
-                    </div>
+                {/* Info Banner - Compact */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 flex items-start gap-2">
+                    <AlertCircle className="text-blue-600 flex-shrink-0 mt-0.5" size={16} />
+                    <p className="text-xs text-blue-800">
+                        <strong>Local Storage:</strong> Data saved in browser. Export regularly to backup.
+                    </p>
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-8">
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg mb-6 text-sm">
                         {error}
                     </div>
                 )}
 
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-4 mb-8">
+                {/* Action Buttons - Compact */}
+                <div className="flex flex-wrap gap-3 mb-6">
                     <button
                         onClick={() => setShowAddForm(true)}
-                        className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md"
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md text-sm"
                     >
-                        <Plus size={20} />
+                        <Plus size={18} />
                         Add Stock
                     </button>
 
                     <button
                         onClick={handleRefreshPrices}
                         disabled={refreshing || holdings.length === 0}
-                        className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                     >
-                        <RefreshCw size={20} className={refreshing ? 'animate-spin' : ''} />
+                        <RefreshCw size={18} className={refreshing ? 'animate-spin' : ''} />
                         {refreshing ? 'Refreshing...' : 'Refresh Prices'}
                     </button>
 
                     {lastUpdated && (
-                        <div className="flex items-center gap-2 px-4 py-3 bg-gray-100 rounded-lg text-sm text-gray-600">
+                        <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg text-xs text-gray-600">
                             Last updated: {new Date(lastUpdated).toLocaleString()}
                         </div>
                     )}
@@ -111,16 +107,20 @@ export default function PortfolioPage() {
                 {/* Portfolio Summary */}
                 {holdings.length > 0 && <PortfolioSummary metrics={metrics} />}
 
-                {/* Portfolio Chart */}
-                {holdings.length > 0 && <PortfolioChart holdings={holdings} />}
-
                 {/* Stock List */}
                 <StockList holdings={holdings} onUpdate={loadPortfolio} />
 
-                {/* Export/Import */}
+                {/* Data Management - Moved above chart */}
                 {holdings.length > 0 && (
-                    <div className="mt-8">
+                    <div className="mt-6">
                         <ExportImport onUpdate={loadPortfolio} />
+                    </div>
+                )}
+
+                {/* Portfolio Chart - Now at bottom */}
+                {holdings.length > 0 && (
+                    <div className="mt-6">
+                        <PortfolioChart holdings={holdings} />
                     </div>
                 )}
 
@@ -132,29 +132,29 @@ export default function PortfolioPage() {
                     />
                 )}
 
-                {/* Educational Content */}
+                {/* Educational Content - Compact */}
                 {holdings.length === 0 && (
-                    <div className="mt-12 bg-white rounded-lg shadow-md p-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                    <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+                        <h2 className="text-xl font-bold text-gray-900 mb-3">
                             How to Use the Portfolio Tracker
                         </h2>
-                        <div className="space-y-4 text-gray-700">
+                        <div className="space-y-3 text-gray-700 text-sm">
                             <div>
-                                <h3 className="font-semibold text-lg mb-2">1. Add Your Stocks</h3>
+                                <h3 className="font-semibold mb-1">1. Add Your Stocks</h3>
                                 <p>
                                     Click "Add Stock" and enter the stock symbol (e.g., AAPL for Apple, GOOGL for
                                     Google). The system will automatically fetch the company name and current price.
                                 </p>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-lg mb-2">2. Track Performance</h3>
+                                <h3 className="font-semibold mb-1">2. Track Performance</h3>
                                 <p>
                                     View your portfolio's total value, profit/loss, and individual stock performance.
                                     Prices update automatically when you refresh.
                                 </p>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-lg mb-2">3. Export Your Data</h3>
+                                <h3 className="font-semibold mb-1">3. Export Your Data</h3>
                                 <p>
                                     Export your portfolio to JSON or CSV format for backup or analysis. You can also
                                     import previously exported portfolios.

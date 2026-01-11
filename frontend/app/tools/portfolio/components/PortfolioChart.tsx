@@ -34,9 +34,9 @@ export default function PortfolioChart({ holdings }: PortfolioChartProps) {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Portfolio Composition</h2>
-            <ResponsiveContainer width="100%" height={400}>
+        <div className="bg-white rounded-lg shadow-md p-4">
+            <h2 className="text-lg font-bold text-gray-900 mb-3">Portfolio Composition</h2>
+            <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                     <Pie
                         data={data}
@@ -44,7 +44,7 @@ export default function PortfolioChart({ holdings }: PortfolioChartProps) {
                         cy="50%"
                         labelLine={false}
                         label={({ name, percent }) => `${name} ${percent ? (percent * 100).toFixed(1) : '0'}%`}
-                        outerRadius={120}
+                        outerRadius={100}
                         fill="#8884d8"
                         dataKey="value"
                     >
