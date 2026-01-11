@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Use v10 API which is more reliable
-const YAHOO_QUOTE_API = 'https://query2.finance.yahoo.com/v10/finance/quoteSummary';
+// Finnhub API - Free tier: 60 API calls/minute
+const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY || 'demo'; // Use demo key for testing
+const FINNHUB_API = 'https://finnhub.io/api/v1';
 
-export const runtime = 'edge'; // Use edge runtime for better performance
-export const dynamic = 'force-dynamic'; // Always run dynamically
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -25,52 +26,49 @@ export async function GET(request: NextRequest) {
 
         console.log('[API] Fetching data for symbols:', symbolList);
 
-        // Fetch each symbol individually (more reliable than batch)
+        // Fetch each symbol from Finnhub
         for (const symbol of symbolList) {
             try {
-                const url = `${YAHOO_QUOTE_API}/${symbol}?modules=price,summaryDetail`;
-                console.log('[API] Fetching:', symbol);
+                // Fetch quote data
+                const quoteUrl = `${FINNHUB_API}/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+                const profileUrl = `${FINNHUB_API}/stock/profile2?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
 
-                const response = await fetch(url, {
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                        'Accept': '*/*',
-                        'Accept-Language': 'en-US,en;q=0.9',
-                    },
-                });
+                const [quoteRes, profileRes] = await Promise.all([
+                    fetch(quoteUrl),
+                    fetch(profileUrl)
+                ]);
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const quoteSummary = data.quoteSummary?.result?.[0];
+                if (quoteRes.ok && profileRes.ok) {
+                    const quote = await quoteRes.json();
+                    const profile = await profileRes.json();
 
-                    if (quoteSummary) {
-                        const price = quoteSummary.price;
-                        const summary = quoteSummary.summaryDetail;
-
+                    // Only add if we got valid data
+                    if (quote.c && quote.c > 0) {
                         const stockData = {
-                            symbol: price.symbol,
-                            longName: price.longName,
-                            shortName: price.shortName,
-                            regularMarketPrice: price.regularMarketPrice?.raw || 0,
-                            regularMarketChange: price.regularMarketChange?.raw || 0,
-                            regularMarketChangePercent: price.regularMarketChangePercent?.raw || 0,
-                            regularMarketVolume: price.regularMarketVolume?.raw || 0,
-                            marketCap: price.marketCap?.raw || 0,
-                            trailingPE: summary?.trailingPE?.raw || null,
-                            forwardPE: summary?.forwardPE?.raw || null,
+                            symbol: symbol,
+                            longName: profile.name || symbol,
+                            shortName: profile.name || symbol,
+                            regularMarketPrice: quote.c, // Current price
+                            regularMarketChange: quote.d, // Change
+                            regularMarketChangePercent: quote.dp, // Change percent
+                            regularMarketVolume: 0, // Finnhub doesn't provide volume in quote
+                            marketCap: profile.marketCapitalization ? profile.marketCapitalization * 1000000 : 0, // Convert from millions
+                            trailingPE: profile.finnhubIndustry ? null : null, // PE not in free tier
+                            forwardPE: null,
                         };
 
                         results.push(stockData);
-                        console.log('[API] Successfully fetched:', symbol, stockData);
-                    } else {
-                        console.log('[API] No quote summary for:', symbol);
+                        console.log('[API] Successfully fetched:', symbol);
                     }
                 } else {
-                    console.error(`[API] Failed to fetch ${symbol}: ${response.status}`);
+                    console.error(`[API] Failed to fetch ${symbol}: quote ${quoteRes.status}, profile ${profileRes.status}`);
                 }
             } catch (err) {
                 console.error(`[API] Error fetching ${symbol}:`, err);
             }
+
+            // Small delay to respect rate limits (60/min = 1 per second)
+            await new Promise(resolve => setTimeout(resolve, 1100));
         }
 
         console.log('[API] Returning', results.length, 'results');
@@ -85,7 +83,7 @@ export async function GET(request: NextRequest) {
             },
             {
                 headers: {
-                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+                    'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600', // 5 min cache
                     'Access-Control-Allow-Origin': '*',
                 },
             }
@@ -97,13 +95,13 @@ export async function GET(request: NextRequest) {
                 quoteResponse: {
                     result: [],
                     error: 'Failed to fetch stock data',
-                }
+                },
             },
             {
                 status: 200,
                 headers: {
                     'Access-Control-Allow-Origin': '*',
-                }
+                },
             }
         );
     }
