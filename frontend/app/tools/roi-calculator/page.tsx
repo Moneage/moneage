@@ -8,8 +8,8 @@ import { RefreshCw, TrendingUp, DollarSign } from 'lucide-react';
 import type { Metadata } from 'next';
 
 const currencies = [
-    { label: 'INR (₹)', value: '₹' },
     { label: 'USD ($)', value: '$' },
+    { label: 'INR (₹)', value: '₹' },
     { label: 'EUR (€)', value: '€' },
     { label: 'GBP (£)', value: '£' },
 ];
@@ -18,7 +18,7 @@ export default function ROICalculator() {
     const [principal, setPrincipal] = useState(100000);
     const [rate, setRate] = useState(12);
     const [years, setYears] = useState(5);
-    const [currency, setCurrency] = useState('₹');
+    const [currency, setCurrency] = useState('$');
     const [results, setResults] = useState({ totalValue: 0, investedAmount: 0, wealthGained: 0, annualizedReturn: 0 });
 
     useEffect(() => {

@@ -10,12 +10,12 @@ export default function SIPCalculator() {
     const [monthlyInvestment, setMonthlyInvestment] = useState(5000);
     const [rate, setRate] = useState(12);
     const [years, setYears] = useState(10);
-    const [currency, setCurrency] = useState('₹');
+    const [currency, setCurrency] = useState('$');
     const [results, setResults] = useState({ totalValue: 0, investedAmount: 0, wealthGained: 0 });
 
     const currencies = [
-        { label: 'INR (₹)', value: '₹' },
         { label: 'USD ($)', value: '$' },
+        { label: 'INR (₹)', value: '₹' },
         { label: 'EUR (€)', value: '€' },
         { label: 'GBP (£)', value: '£' },
     ];

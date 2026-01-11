@@ -10,12 +10,12 @@ export default function EMICalculator() {
     const [loanAmount, setLoanAmount] = useState(5000000); // 50 Lakhs
     const [rate, setRate] = useState(8.5);
     const [years, setYears] = useState(20);
-    const [currency, setCurrency] = useState('₹');
+    const [currency, setCurrency] = useState('$');
     const [results, setResults] = useState({ emi: 0, totalPayable: 0, totalInterest: 0 });
 
     const currencies = [
-        { label: 'INR (₹)', value: '₹' },
         { label: 'USD ($)', value: '$' },
+        { label: 'INR (₹)', value: '₹' },
         { label: 'EUR (€)', value: '€' },
         { label: 'GBP (£)', value: '£' },
     ];
