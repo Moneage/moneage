@@ -11,7 +11,7 @@ import StructuredData from '@/components/StructuredData';
 import { generateArticleSchema, generateBreadcrumbSchema, generatePersonSchema, generateFAQSchema } from '@/lib/schema';
 import { parseFAQFromContent } from '@/lib/contentParser';
 import ArticleActions from '@/components/ArticleActions';
-import TextToSpeech from '@/components/TextToSpeech';
+
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
 import AdUnit from '@/components/AdUnit';
@@ -209,10 +209,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     </div>
                 )}
 
-                {/* Audio Player and Reader Controls */}
-                <div className="flex flex-col gap-8 mb-8">
-                    <TextToSpeech title={article.title} content={article.content} />
-                </div>
+
 
                 {/* Content with Text Size Controls */}
                 <ArticleReader>
