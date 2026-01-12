@@ -171,12 +171,17 @@ Located at `/tools`:
 ### 5. Advertisement Integration
 - **Management:** Strapi `Advertisement` collection
 - **Component:** `AdUnit.tsx`
+- **Google AdSense:** Integrated via `GoogleAdSense.tsx` component
+  - Script loaded in root layout for auto ads
+  - Publisher ID: ca-pub-9135303720365290
+  - Strategy: afterInteractive (Next.js Script optimization)
 - **Placements:**
   - Homepage sidebar
   - Article bottom
 - **Ad Types:**
   - Image ads (with destination URL)
   - Code snippet ads (Google AdSense, etc.)
+  - Auto ads (Google AdSense)
 - **Features:**
   - Random ad selection per placement
   - Active/inactive toggle
@@ -193,10 +198,14 @@ Located at `/tools`:
 
 ### 7. SEO & Analytics
 - **Google Search Console:** Verified
-- **Google AdSense:** Verified (ca-pub-9135303720365290)
+- **Google Analytics:** Integrated via `GoogleAnalytics.tsx` component
+- **Google AdSense:** Fully integrated
+  - Publisher ID: ca-pub-9135303720365290
+  - Script: Loaded via `GoogleAdSense.tsx` in root layout
+  - Ads.txt: `https://moneage.com/ads.txt`
+  - Auto ads enabled
 - **Sitemap:** `https://moneage.com/sitemap.xml`
 - **Robots.txt:** Configured
-- **Ads.txt:** `https://moneage.com/ads.txt`
 - **Structured Data:** Organization and Website schemas
 - **Meta Tags:** Dynamic per page
 
@@ -585,6 +594,19 @@ Render auto-deploys in ~3-5 minutes.
 
 ---
 
+## Removed Features
+
+### Features Removed from Production
+- **Text-to-Speech Article Reader:** Removed due to reliability issues
+  - Previously located in `ArticleActions.tsx`
+  - Experienced intermittent failures and errors
+  - May be reimplemented with improved stability in future
+- **Stock Screener Tool:** Removed from tools page
+  - Previously listed at `/tools`
+  - Functionality not fully implemented
+
+---
+
 ## Future Enhancements
 
 ### Planned Features
@@ -595,7 +617,8 @@ Render auto-deploys in ~3-5 minutes.
 - [ ] Multi-language support (Nepali/English)
 - [ ] Mobile app (React Native)
 - [ ] Premium subscription tier
-- [ ] Stock portfolio tracker
+- [ ] Stock portfolio tracker (basic version exists at `/tools/portfolio`)
+- [ ] Improved Text-to-Speech article reader
 
 ### Technical Improvements
 - [ ] Redis caching layer
@@ -626,14 +649,20 @@ Render auto-deploys in ~3-5 minutes.
 
 ## Version History
 
-### v1.0.0 (Current)
+### v1.1.0 (Current)
+- Google AdSense script integration (auto ads enabled)
+- Removed unstable Text-to-Speech reader
+- Removed incomplete Stock Screener
+- Documentation updates
+
+### v1.0.0
 - Initial production release
 - Core features: Articles, Calculators, Newsletter, Ads
 - SEO optimization
-- Google AdSense integration
+- Google AdSense verification
 - Deployed on Vercel + Render
 
 ---
 
-**Last Updated:** January 11, 2026  
+**Last Updated:** January 12, 2026  
 **Maintained By:** Moneage Development Team
