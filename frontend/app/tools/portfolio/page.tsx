@@ -63,8 +63,6 @@ export default function PortfolioPage() {
                     <p className="text-gray-600 text-sm">
                         Track your US stock investments and monitor performance in real-time
                     </p>
-                    {/* Newsletter CTA */}
-                    <ArticleNewsletterCTA />
                 </div>
 
                 {/* Info Banner - Compact */}
@@ -73,16 +71,12 @@ export default function PortfolioPage() {
                     <p className="text-xs text-blue-800">
                         <strong>Local Storage:</strong> Data saved in browser. Export regularly to backup.
                     </p>
-                    {/* Newsletter CTA */}
-                    <ArticleNewsletterCTA />
                 </div>
 
                 {/* Error Message */}
                 {error && (
                     <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg mb-6 text-sm">
                         {error}
-                        {/* Newsletter CTA */}
-                        <ArticleNewsletterCTA />
                     </div>
                 )}
 
@@ -108,12 +102,8 @@ export default function PortfolioPage() {
                     {lastUpdated && (
                         <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg text-xs text-gray-600">
                             Last updated: {new Date(lastUpdated).toLocaleString()}
-                            {/* Newsletter CTA */}
-                            <ArticleNewsletterCTA />
                         </div>
                     )}
-                    {/* Newsletter CTA */}
-                    <ArticleNewsletterCTA />
                 </div>
 
                 {/* Portfolio Summary */}
@@ -126,8 +116,6 @@ export default function PortfolioPage() {
                 {holdings.length > 0 && (
                     <div className="mt-6">
                         <ExportImport onUpdate={loadPortfolio} />
-                        {/* Newsletter CTA */}
-                        <ArticleNewsletterCTA />
                     </div>
                 )}
 
@@ -135,8 +123,6 @@ export default function PortfolioPage() {
                 {holdings.length > 0 && (
                     <div className="mt-6">
                         <PortfolioChart holdings={holdings} />
-                        {/* Newsletter CTA */}
-                        <ArticleNewsletterCTA />
                     </div>
                 )}
 
@@ -161,8 +147,6 @@ export default function PortfolioPage() {
                                     Click "Add Stock" and enter the stock symbol (e.g., AAPL for Apple, GOOGL for
                                     Google). The system will automatically fetch the company name and current price.
                                 </p>
-                                {/* Newsletter CTA */}
-                                <ArticleNewsletterCTA />
                             </div>
                             <div>
                                 <h3 className="font-semibold mb-1">2. Track Performance</h3>
@@ -170,8 +154,6 @@ export default function PortfolioPage() {
                                     View your portfolio's total value, profit/loss, and individual stock performance.
                                     Prices update automatically when you refresh.
                                 </p>
-                                {/* Newsletter CTA */}
-                                <ArticleNewsletterCTA />
                             </div>
                             <div>
                                 <h3 className="font-semibold mb-1">3. Export Your Data</h3>
@@ -179,21 +161,14 @@ export default function PortfolioPage() {
                                     Export your portfolio to JSON or CSV format for backup or analysis. You can also
                                     import previously exported portfolios.
                                 </p>
-                                {/* Newsletter CTA */}
-                                <ArticleNewsletterCTA />
                             </div>
-                            {/* Newsletter CTA */}
-                            <ArticleNewsletterCTA />
                         </div>
-                        {/* Newsletter CTA */}
-                        <ArticleNewsletterCTA />
                     </div>
                 )}
+
                 {/* Newsletter CTA */}
                 <ArticleNewsletterCTA />
             </div>
-            {/* Newsletter CTA */}
-            <ArticleNewsletterCTA />
         </div>
     );
 }
