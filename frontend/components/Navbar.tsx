@@ -46,6 +46,14 @@ export default function Navbar() {
                             />
                         </div>
                     </form>
+
+                    {/* Subscribe Button */}
+                    <Link
+                        href="#newsletter"
+                        className="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-6 py-2.5 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg whitespace-nowrap"
+                    >
+                        Subscribe
+                    </Link>
                 </div>
 
                 {/* Navigation Links */}

@@ -5,6 +5,7 @@ import { calculateLumpsum } from '@/lib/calculators';
 import CalculatorInput from '@/components/calculators/CalculatorInput';
 import DonutChart from '@/components/calculators/DonutChart';
 import { Percent, TrendingUp, IndianRupee } from 'lucide-react';
+import ArticleNewsletterCTA from '@/components/ArticleNewsletterCTA';
 
 export default function CompoundCalculator() {
     const [investment, setInvestment] = useState(100000);

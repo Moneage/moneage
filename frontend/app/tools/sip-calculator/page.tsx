@@ -5,6 +5,7 @@ import { calculateSIP } from '@/lib/calculators';
 import CalculatorInput from '@/components/calculators/CalculatorInput';
 import DonutChart from '@/components/calculators/DonutChart';
 import { RefreshCw, TrendingUp, IndianRupee } from 'lucide-react';
+import ArticleNewsletterCTA from '@/components/ArticleNewsletterCTA';
 
 export default function SIPCalculator() {
     const [monthlyInvestment, setMonthlyInvestment] = useState(5000);
@@ -138,6 +139,9 @@ export default function SIPCalculator() {
                     It clearly shows the split between the money you invested and the profit earned.
                 </p>
             </div>
+
+            {/* Newsletter CTA */}
+            <ArticleNewsletterCTA />
         </div>
     );
 }

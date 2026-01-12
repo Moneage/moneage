@@ -15,6 +15,7 @@ import ArticleActions from '@/components/ArticleActions';
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
 import AdUnit from '@/components/AdUnit';
+import ArticleNewsletterCTA from '@/components/ArticleNewsletterCTA';
 
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -298,6 +299,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         </div>
                     </div>
                 )}
+
+                {/* Newsletter CTA */}
+                <ArticleNewsletterCTA />
 
                 {/* Smart "Read Next" Section */}
                 {relatedArticles.length > 0 && <ReadNext articles={relatedArticles} />}
