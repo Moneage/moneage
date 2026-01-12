@@ -1,0 +1,71 @@
+{
+    "kind": "collectionType",
+    "collectionName": "newsletters",
+    "info": {
+        "singularName": "newsletter",
+        "pluralName": "newsletters",
+        "displayName": "Newsletter",
+        "description": "Email newsletters and campaigns"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "subject": {
+            "type": "string",
+            "required": true
+        },
+        "preheader": {
+            "type": "string",
+            "maxLength": 100
+        },
+        "content": {
+            "type": "richtext",
+            "required": true
+        },
+        "htmlContent": {
+            "type": "text"
+        },
+        "status": {
+            "type": "enumeration",
+            "enum": [
+                "draft",
+                "scheduled",
+                "sending",
+                "sent"
+            ],
+            "default": "draft"
+        },
+        "scheduledFor": {
+            "type": "datetime"
+        },
+        "sentAt": {
+            "type": "datetime"
+        },
+        "sentCount": {
+            "type": "integer",
+            "default": 0
+        },
+        "openCount": {
+            "type": "integer",
+            "default": 0
+        },
+        "clickCount": {
+            "type": "integer",
+            "default": 0
+        },
+        "targetAudience": {
+            "type": "enumeration",
+            "enum": [
+                "all",
+                "confirmed",
+                "segment"
+            ],
+            "default": "confirmed"
+        },
+        "segment": {
+            "type": "json"
+        }
+    }
+}

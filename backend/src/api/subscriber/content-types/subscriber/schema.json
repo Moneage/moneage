@@ -23,6 +23,35 @@
         },
         "source": {
             "type": "string"
+        },
+        "isConfirmed": {
+            "type": "boolean",
+            "default": false
+        },
+        "confirmationToken": {
+            "type": "string",
+            "unique": true
+        },
+        "confirmedAt": {
+            "type": "datetime"
+        },
+        "unsubscribedAt": {
+            "type": "datetime"
+        },
+        "unsubscribeToken": {
+            "type": "string",
+            "unique": true
+        },
+        "preferences": {
+            "type": "json",
+            "default": {
+                "weeklyNewsletter": true,
+                "productUpdates": true,
+                "marketInsights": true
+            }
+        },
+        "metadata": {
+            "type": "json"
         }
     }
 }

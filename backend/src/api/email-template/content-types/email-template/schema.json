@@ -1,0 +1,50 @@
+{
+    "kind": "collectionType",
+    "collectionName": "email_templates",
+    "info": {
+        "singularName": "email-template",
+        "pluralName": "email-templates",
+        "displayName": "Email Template",
+        "description": "Reusable email templates"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true,
+            "unique": true
+        },
+        "type": {
+            "type": "enumeration",
+            "enum": [
+                "welcome",
+                "confirmation",
+                "newsletter",
+                "notification"
+            ],
+            "required": true
+        },
+        "subject": {
+            "type": "string",
+            "required": true
+        },
+        "htmlContent": {
+            "type": "text",
+            "required": true
+        },
+        "textContent": {
+            "type": "text"
+        },
+        "variables": {
+            "type": "json",
+            "default": []
+        },
+        "isActive": {
+            "type": "boolean",
+            "default": true
+        }
+    }
+}
