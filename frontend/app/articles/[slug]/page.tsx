@@ -14,7 +14,7 @@ import ArticleActions from '@/components/ArticleActions';
 
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
-import ArticleReader from '@/components/ArticleReader';
+
 import ArticleSummary from '@/components/ArticleSummary';
 
 export const revalidate = 300; // Revalidate every 5 minutes

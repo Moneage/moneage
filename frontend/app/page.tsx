@@ -3,7 +3,7 @@ import HeroArticle from '@/components/HeroArticle';
 import MarketTicker from '@/components/MarketTicker';
 import SidebarArticleCard from '@/components/SidebarArticleCard';
 import ArticleCard from '@/components/ArticleCard';
-import ArticleCard from '@/components/ArticleCard';
+
 import { TrendingUp } from 'lucide-react';
 import { generateMetadata as generateMeta } from '@/lib/metadata';
 import type { Metadata } from 'next';
