@@ -55,9 +55,7 @@ export interface Article {
     coverImage: Image | null;
     category: Category | null;
     author: Author | null;
-    aiTldr?: string;
-    aiMetaDescription?: string;
-    aiKeywords?: string;
+
 }
 
 export interface Meta {

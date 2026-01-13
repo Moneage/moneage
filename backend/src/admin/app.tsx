@@ -1,4 +1,4 @@
-import GenerateSummary from './extensions/components/GenerateSummary';
+
 
 export default {
     config: {
@@ -32,9 +32,5 @@ export default {
         ],
     },
     bootstrap(app: any) {
-        // app.injectContentManagerComponent('editView', 'right-links', {
-        //     name: 'generate-summary-button',
-        //     Component: GenerateSummary,
-        // });
     },
 };

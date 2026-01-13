@@ -15,7 +15,7 @@ import ArticleActions from '@/components/ArticleActions';
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
 
-import ArticleSummary from '@/components/ArticleSummary';
+
 
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -196,16 +196,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     </div>
                 </header>
 
-                {/* AI-Generated TL;DR Summary */}
-                <ArticleSummary
-                    storedSummary={
-                        article.aiTldr ? {
-                            tldr: article.aiTldr,
-                            metaDescription: article.aiMetaDescription || '',
-                            keywords: article.aiKeywords ? article.aiKeywords.split(',').map((k: string) => k.trim()) : [],
-                        } : null
-                    }
-                />
+
 
                 {/* Featured Image */}
                 {imageUrl && (
