@@ -16,6 +16,33 @@ import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
 
 
+// Helper to render inline content (bold, italic, links)
+const renderInlineContent = (children: any[]): React.ReactNode[] => {
+    return children.map((child: any, index: number) => {
+        // Handle links
+        if (child.type === 'link') {
+            return (
+                <a
+                    key={index}
+                    href={child.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline hover:text-blue-700"
+                >
+                    {renderInlineContent(child.children)}
+                </a>
+            );
+        }
+        // Handle text with formatting
+        if (child.text) {
+            const text = child.text;
+            if (child.bold) return <strong key={index} className="font-bold text-slate-900">{text}</strong>;
+            if (child.italic) return <em key={index}>{text}</em>;
+            return <span key={index}>{text}</span>;
+        }
+        return null;
+    });
+};
 
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -221,30 +248,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                             if (block.type === 'paragraph') {
                                 return (
                                     <p key={index} className="mb-6 text-slate-700 leading-relaxed">
-                                        {block.children.map((child: any, childIndex: number) => {
-                                            // Handle links
-                                            if (child.type === 'link') {
-                                                return (
-                                                    <a
-                                                        key={childIndex}
-                                                        href={child.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 underline hover:text-blue-700"
-                                                    >
-                                                        {child.children?.map((linkChild: any) => linkChild.text).join('')}
-                                                    </a>
-                                                );
-                                            }
-                                            // Handle text with formatting
-                                            if (child.text) {
-                                                let text = child.text;
-                                                if (child.bold) return <strong key={childIndex} className="font-bold text-slate-900">{text}</strong>;
-                                                if (child.italic) return <em key={childIndex}>{text}</em>;
-                                                return <span key={childIndex}>{text}</span>;
-                                            }
-                                            return null;
-                                        })}
+                                        {renderInlineContent(block.children)}
                                     </p>
                                 );
                             }
@@ -255,8 +259,39 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                                     : "text-2xl font-bold text-slate-900 mt-10 mb-4";
                                 return (
                                     <Tag key={index} className={className}>
-                                        {block.children.map((child: any) => child.text).join('')}
+                                        {renderInlineContent(block.children)}
                                     </Tag>
+                                );
+                            }
+                            if (block.type === 'list') {
+                                const Tag = block.format === 'ordered' ? 'ol' : 'ul';
+                                const listClass = block.format === 'ordered'
+                                    ? "list-decimal pl-6 mb-6 text-slate-700 marker:text-slate-500"
+                                    : "list-disc pl-6 mb-6 text-slate-700 marker:text-slate-500";
+                                return (
+                                    <Tag key={index} className={listClass}>
+                                        {block.children.map((item: any, itemIndex: number) => (
+                                            <li key={itemIndex} className="mb-2 pl-1 leading-relaxed">
+                                                {renderInlineContent(item.children)}
+                                            </li>
+                                        ))}
+                                    </Tag>
+                                );
+                            }
+                            // Handle quotes
+                            if (block.type === 'quote') {
+                                return (
+                                    <blockquote key={index} className="border-l-4 border-blue-500 pl-4 italic my-6 text-slate-700 bg-slate-50 py-3 pr-4 rounded-r-lg">
+                                        {renderInlineContent(block.children)}
+                                    </blockquote>
+                                );
+                            }
+                            // Handle code blocks
+                            if (block.type === 'code') {
+                                return (
+                                    <pre key={index} className="bg-slate-900 text-slate-50 p-4 rounded-lg overflow-x-auto mb-6 text-sm font-mono">
+                                        <code>{block.children[0].text}</code>
+                                    </pre>
                                 );
                             }
                             return null;
