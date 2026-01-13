@@ -82,9 +82,9 @@ export default function Navbar() {
                     </Link>
                     <Link
                         href="/market-summary"
-                        className="px-4 py-2 text-slate-700 hover:text-navy font-medium rounded-lg hover:bg-slate-100 transition-colors whitespace-nowrap"
+                        className="px-4 py-2 text-green-700 hover:text-green-800 font-semibold rounded-lg bg-green-50 hover:bg-green-100 transition-colors whitespace-nowrap border border-green-200"
                     >
-                        Market Summary
+                        📊 Market Summary
                     </Link>
                     <Link
                         href="/category/money"
