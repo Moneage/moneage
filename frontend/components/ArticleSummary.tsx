@@ -55,10 +55,10 @@ export default function ArticleSummary({ title, content, excerpt }: ArticleSumma
 
     if (loading) {
         return (
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+            <div className="bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-50 border border-amber-200 rounded-xl p-6 mb-8 shadow-sm">
                 <div className="flex items-center gap-2">
-                    <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
-                    <span className="text-slate-600">Generating AI summary...</span>
+                    <Loader2 className="w-5 h-5 text-amber-600 animate-spin" />
+                    <span className="text-slate-600 font-medium">Generating AI summary...</span>
                 </div>
             </div>
         );
@@ -69,34 +69,50 @@ export default function ArticleSummary({ title, content, excerpt }: ArticleSumma
     }
 
     return (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg shadow-sm">
-            <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="w-5 h-5 text-blue-600" />
-                <h3 className="font-bold text-lg text-slate-900">TL;DR</h3>
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
-                    AI Summary
-                </span>
-                {summary.cached && (
-                    <span className="text-xs text-slate-500 ml-auto">
-                        Cached
-                    </span>
+        <div className="relative bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 border-2 border-amber-300 rounded-2xl p-8 mb-8 shadow-lg overflow-hidden">
+            {/* Decorative background pattern */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-amber-200/20 to-transparent rounded-full blur-3xl -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-yellow-200/20 to-transparent rounded-full blur-2xl -z-10"></div>
+
+            <div className="relative z-10">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-2 rounded-lg shadow-md">
+                        <Sparkles className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                        <h3 className="font-bold text-xl text-slate-900">Quick Summary</h3>
+                        <p className="text-xs text-slate-600">AI-generated • Powered by Gemini</p>
+                    </div>
+                    {summary.cached && (
+                        <span className="text-xs text-slate-500 bg-white/50 px-3 py-1 rounded-full">
+                            Cached
+                        </span>
+                    )}
+                </div>
+
+                {/* Summary Text */}
+                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 mb-4 border border-amber-200/50">
+                    <p className="text-slate-800 leading-relaxed text-lg font-medium">
+                        {summary.tldr}
+                    </p>
+                </div>
+
+                {/* Keywords */}
+                {summary.keywords && summary.keywords.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                        <span className="text-xs font-semibold text-slate-600 self-center">Topics:</span>
+                        {summary.keywords.map((keyword, index) => (
+                            <span
+                                key={index}
+                                className="text-xs bg-white/80 text-amber-800 px-3 py-1.5 rounded-full border border-amber-200 font-medium hover:bg-amber-100 transition-colors"
+                            >
+                                {keyword}
+                            </span>
+                        ))}
+                    </div>
                 )}
             </div>
-            <p className="text-slate-700 leading-relaxed text-base">
-                {summary.tldr}
-            </p>
-            {summary.keywords && summary.keywords.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-2">
-                    {summary.keywords.map((keyword, index) => (
-                        <span
-                            key={index}
-                            className="text-xs bg-white text-slate-600 px-3 py-1 rounded-full border border-slate-200"
-                        >
-                            {keyword}
-                        </span>
-                    ))}
-                </div>
-            )}
         </div>
     );
 }
