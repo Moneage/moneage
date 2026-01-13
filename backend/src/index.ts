@@ -31,10 +31,15 @@ export default {
         },
         metadatas: {
           id: { edit: {}, list: { label: "id", searchable: true, sortable: true } },
+          documentId: { edit: {}, list: { label: "documentId", searchable: true, sortable: true } },
           title: { edit: {}, list: { label: "title", searchable: true, sortable: true } },
           slug: { edit: {}, list: { label: "slug", searchable: true, sortable: true } },
           createdAt: { edit: {}, list: { label: "createdAt", searchable: true, sortable: true } },
           updatedAt: { edit: {}, list: { label: "updatedAt", searchable: true, sortable: true } },
+          publishedAt: { edit: {}, list: { label: "publishedAt", searchable: true, sortable: true } },
+          createdBy: { edit: {}, list: { label: "createdBy", searchable: true, sortable: true } },
+          updatedBy: { edit: {}, list: { label: "updatedBy", searchable: true, sortable: true } },
+          locale: { edit: {}, list: { label: "locale", searchable: true, sortable: true } },
           content: { edit: { label: "content", description: "", placeholder: "", visible: true, editable: true }, list: {} },
           excerpt: { edit: { label: "excerpt", description: "", placeholder: "", visible: true, editable: true }, list: {} },
           coverImage: { edit: { label: "coverImage", description: "", placeholder: "", visible: true, editable: true }, list: {} },
@@ -45,7 +50,7 @@ export default {
           aiKeywords: { edit: { label: "aiKeywords", description: "", placeholder: "", visible: true, editable: true }, list: {} }
         },
         layouts: {
-          list: ["id", "title", "slug", "createdAt"],
+          list: ["id", "title", "slug", "publishedAt", "createdAt"],
           edit: [
             [{ name: "title", size: 6 }, { name: "slug", size: 6 }],
             [{ name: "content", size: 12 }],
