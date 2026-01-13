@@ -168,12 +168,9 @@ async function saveSummaryToStrapi(articleId: number, summary: any) {
             },
             body: JSON.stringify({
                 data: {
-                    aiSummary: {
-                        tldr: summary.tldr,
-                        metaDescription: summary.metaDescription,
-                        keywords: summary.keywords,
-                        generatedAt: new Date().toISOString(),
-                    },
+                    aiTldr: summary.tldr,
+                    aiMetaDescription: summary.metaDescription,
+                    aiKeywords: summary.keywords.join(', '),
                 },
             }),
         });

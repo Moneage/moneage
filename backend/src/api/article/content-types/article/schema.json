@@ -46,8 +46,17 @@
             "target": "api::author.author",
             "inversedBy": "articles"
         },
-        "aiSummary": {
-            "type": "json",
+        "aiTldr": {
+            "type": "text",
+            "required": false
+        },
+        "aiMetaDescription": {
+            "type": "string",
+            "required": false,
+            "maxLength": 160
+        },
+        "aiKeywords": {
+            "type": "string",
             "required": false
         }
     }

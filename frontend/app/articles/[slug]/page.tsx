@@ -202,7 +202,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     title={article.title}
                     content={JSON.stringify(article.content)}
                     excerpt={article.excerpt || undefined}
-                    storedSummary={article.aiSummary}
+                    storedSummary={
+                        article.aiTldr ? {
+                            tldr: article.aiTldr,
+                            metaDescription: article.aiMetaDescription || '',
+                            keywords: article.aiKeywords ? article.aiKeywords.split(',').map((k: string) => k.trim()) : [],
+                        } : null
+                    }
                 />
 
                 {/* Featured Image */}
