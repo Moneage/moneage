@@ -32,4 +32,8 @@ export default ({ env }) => ({
             },
         },
     },
+    ckeditor: {
+        enabled: true,
+        resolve: './node_modules/@ckeditor/strapi-plugin-ckeditor'
+    },
 });

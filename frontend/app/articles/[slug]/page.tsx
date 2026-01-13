@@ -14,7 +14,6 @@ import ArticleActions from '@/components/ArticleActions';
 
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
-import AdUnit from '@/components/AdUnit';
 import ArticleSummary from '@/components/ArticleSummary';
 
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -224,58 +223,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 
                 {/* Content with Text Size Controls */}
-                <ArticleReader>
-                    {article.content && Array.isArray(article.content) ? (
-                        article.content.map((block: any, index: number) => {
-                            if (block.type === 'paragraph') {
-                                return (
-                                    <p key={index} className="mb-6 text-slate-700 leading-relaxed">
-                                        {block.children.map((child: any, childIndex: number) => {
-                                            // Handle links
-                                            if (child.type === 'link') {
-                                                return (
-                                                    <a
-                                                        key={childIndex}
-                                                        href={child.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 underline hover:text-blue-700"
-                                                    >
-                                                        {child.children?.map((linkChild: any) => linkChild.text).join('')}
-                                                    </a>
-                                                );
-                                            }
-                                            // Handle text with formatting
-                                            if (child.text) {
-                                                let text = child.text;
-                                                if (child.bold) return <strong key={childIndex} className="font-bold text-slate-900">{text}</strong>;
-                                                if (child.italic) return <em key={childIndex}>{text}</em>;
-                                                return <span key={childIndex}>{text}</span>;
-                                            }
-                                            return null;
-                                        })}
-                                    </p>
-                                );
-                            }
-                            if (block.type === 'heading') {
-                                const Tag = `h${block.level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-                                const className = block.level === 2
-                                    ? "text-3xl font-bold text-slate-900 mt-12 mb-6"
-                                    : "text-2xl font-bold text-slate-900 mt-10 mb-4";
-                                return (
-                                    <Tag key={index} className={className}>
-                                        {block.children.map((child: any) => child.text).join('')}
-                                    </Tag>
-                                );
-                            }
-                            return null;
-                        })
-                    ) : (
-                        <p className="text-slate-600">No content available.</p>
-                    )}
-                </ArticleReader>
-
-                <AdUnit placement="article_bottom" className="mb-8" />
+                <ArticleReader content={typeof article.content === 'string' ? article.content : ''} />
 
                 {/* Bottom Actions */}
                 <div className="flex items-center justify-between py-6 border-t border-b border-slate-200 mb-12">

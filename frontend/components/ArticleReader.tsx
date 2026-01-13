@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { Minus, Plus, Type } from 'lucide-react';
 
 interface ArticleReaderProps {
-    children: React.ReactNode;
+    content: string;
 }
 
-export default function ArticleReader({ children }: ArticleReaderProps) {
+export default function ArticleReader({ content }: ArticleReaderProps) {
     const [textSize, setTextSize] = useState<'prose-base' | 'prose-lg' | 'prose-xl' | 'prose-2xl'>('prose-lg');
 
     const handleDecrease = () => {
@@ -21,6 +21,8 @@ export default function ArticleReader({ children }: ArticleReaderProps) {
         else if (textSize === 'prose-lg') setTextSize('prose-xl');
         else if (textSize === 'prose-xl') setTextSize('prose-2xl');
     };
+
+    if (!content) return null;
 
     return (
         <div>
@@ -53,12 +55,14 @@ export default function ArticleReader({ children }: ArticleReaderProps) {
             </div>
 
             {/* Content Display */}
-            <div className={`prose ${textSize} prose-slate max-w-none mb-16 transition-all duration-300 
+            <div
+                className={`prose ${textSize} prose-slate max-w-none mb-16 transition-all duration-300 
                 prose-a:text-blue-600 prose-a:underline prose-a:decoration-blue-600/30 
                 hover:prose-a:text-blue-700 hover:prose-a:decoration-blue-700 
-                prose-a:transition-colors prose-a:font-medium`}>
-                {children}
-            </div>
+                prose-a:transition-colors prose-a:font-medium
+                prose-img:rounded-xl prose-img:shadow-lg prose-headings:text-slate-900 prose-p:text-slate-700`}
+                dangerouslySetInnerHTML={{ __html: content }}
+            />
 
             {/* Hidden div to force Tailwind to generate these classes (Safelist hack for v4) */}
             <div className="hidden prose-sm prose-base prose-lg prose-xl prose-2xl"></div>
