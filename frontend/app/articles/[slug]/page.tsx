@@ -200,7 +200,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <ArticleSummary
                     title={article.title}
                     content={JSON.stringify(article.content)}
-                    excerpt={article.excerpt}
+                    excerpt={article.excerpt || undefined}
                 />
 
                 {/* Featured Image */}
