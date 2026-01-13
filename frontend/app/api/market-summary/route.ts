@@ -137,15 +137,21 @@ async function fetchTopMovers() {
         return { gainers, losers };
     } catch (error) {
         console.error('Error fetching movers:', error);
-        // Return mock data as fallback
+        // Return mock data as fallback with 5 stocks each
         return {
             gainers: [
                 { symbol: 'AAPL', name: 'Apple Inc.', price: '175.50', change: '8.25', changePercent: '4.93' },
                 { symbol: 'MSFT', name: 'Microsoft Corp.', price: '380.00', change: '12.50', changePercent: '3.40' },
+                { symbol: 'GOOGL', name: 'Alphabet Inc.', price: '142.50', change: '4.75', changePercent: '3.45' },
+                { symbol: 'AMZN', name: 'Amazon.com Inc.', price: '155.00', change: '5.20', changePercent: '3.47' },
+                { symbol: 'META', name: 'Meta Platforms Inc.', price: '385.00', change: '11.50', changePercent: '3.08' },
             ],
             losers: [
                 { symbol: 'TSLA', name: 'Tesla Inc.', price: '245.00', change: '-15.50', changePercent: '-5.95' },
                 { symbol: 'NVDA', name: 'NVIDIA Corp.', price: '520.00', change: '-18.00', changePercent: '-3.35' },
+                { symbol: 'AMD', name: 'Advanced Micro Devices', price: '145.00', change: '-4.50', changePercent: '-3.01' },
+                { symbol: 'NFLX', name: 'Netflix Inc.', price: '485.00', change: '-12.00', changePercent: '-2.41' },
+                { symbol: 'PYPL', name: 'PayPal Holdings Inc.', price: '62.50', change: '-1.50', changePercent: '-2.34' },
             ],
         };
     }
