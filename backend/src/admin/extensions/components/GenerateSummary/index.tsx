@@ -1,52 +1,61 @@
 import React, { useState } from 'react';
 import { Button } from '@strapi/design-system';
-import { Sparkles } from '@strapi/icons';
-import { useCMEditViewDataManager } from '@strapi/helper-plugin';
-import { useFetchClient } from '@strapi/helper-plugin';
+import { Sparkle } from '@strapi/icons';
 
 const GenerateSummary = () => {
-    const { modifiedData, onChange, slug } = useCMEditViewDataManager();
-    const { post } = useFetchClient();
     const [loading, setLoading] = useState(false);
 
-    // Only show on Article content type
-    if (slug !== 'api::article.article') {
+    // Parse URL to get ID and ensure we are on article page
+    const match = window.location.pathname.match(/collection-types\/api::article\.article\/([a-zA-Z0-9-]+)/);
+    const isCreate = window.location.pathname.includes('create');
+
+    if (!match && !isCreate) {
         return null;
     }
 
+    const id = match ? match[1] : null;
+
     const handleGenerate = async () => {
+        if (!id) {
+            alert('Please save the article at least once before generating a summary.');
+            return;
+        }
+
         try {
             setLoading(true);
 
-            // Use current draft content
-            const content = modifiedData.content;
-            const title = modifiedData.title;
-            const id = modifiedData.id;
+            const token = sessionStorage.getItem('jwtToken')?.replace(/"/g, '');
 
-            if (!content || !title) {
-                alert('Please add a title and content first.');
+            if (!token) {
+                alert('Authentication error. Please reload.');
                 return;
             }
 
-            // Call API with save=false to just get the data
-            const { data } = await post(`/articles/${id || 'preview'}/generate-summary`, {
-                content,
-                title,
-                save: false
+            // Fetch the generated summary
+            const response = await fetch(`${process.env.STRAPI_ADMIN_BACKEND_URL || ''}/api/articles/${id}/generate-summary`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    save: true // We force save to DB because we can't easily update UI in Strapi 5 without internal hooks
+                })
             });
 
-            if (data && data.success && data.data) {
-                // Update fields in the editor
-                onChange({ target: { name: 'aiTldr', value: data.data.aiTldr } });
-                onChange({ target: { name: 'aiMetaDescription', value: data.data.aiMetaDescription } });
-                onChange({ target: { name: 'aiKeywords', value: data.data.aiKeywords } });
+            const data = await response.json();
 
-                // Use Strapi notification system if available, or simple alert for now
-                // toggleNotification({ type: 'success', message: 'Summary generated!' });
+            if (data && (data.success || data.data)) {
+                const summary = data.data || data.summary;
+                alert(`Summary Generated Successfully!\n\nTLDR: ${summary.aiTldr}\n\nPlease refresh the page to see the changes.`);
+                // Optional: window.location.reload(); 
+            } else {
+                alert('Failed to generate summary.');
             }
+
         } catch (error) {
             console.error('Error generating summary:', error);
-            alert('Failed to generate summary. Make sure you have saved the article at least once.');
+            alert('Failed to generate summary.');
         } finally {
             setLoading(false);
         }
@@ -55,7 +64,7 @@ const GenerateSummary = () => {
     return (
         <Button
             variant="secondary"
-            startIcon={<Sparkles />}
+            startIcon={<Sparkle />}
             loading={loading}
             onClick={handleGenerate}
             fullWidth

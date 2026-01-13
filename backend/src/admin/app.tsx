@@ -31,7 +31,7 @@ export default {
             // 'zh',
         ],
     },
-    bootstrap(app) {
+    bootstrap(app: any) {
         app.injectContentManagerComponent('editView', 'right-links', {
             name: 'generate-summary-button',
             Component: GenerateSummary,
