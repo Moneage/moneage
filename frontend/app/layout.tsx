@@ -7,7 +7,7 @@ import { defaultMetadata } from "@/lib/metadata";
 import StructuredData from "@/components/StructuredData";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/schema";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import GoogleAdSense from "@/components/GoogleAdSense";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-verification-code', // TODO: Add actual verification code
     other: {
-      'google-adsense-account': 'ca-pub-9135303720365290',
+      google: 'your-google-verification-code', // TODO: Add actual verification code
     },
   },
   robots: {
@@ -57,7 +57,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <GoogleAdSense />
         <StructuredData data={generateOrganizationSchema()} />
         <StructuredData data={generateWebsiteSchema()} />
       </head>

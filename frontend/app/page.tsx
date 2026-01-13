@@ -3,7 +3,7 @@ import HeroArticle from '@/components/HeroArticle';
 import MarketTicker from '@/components/MarketTicker';
 import SidebarArticleCard from '@/components/SidebarArticleCard';
 import ArticleCard from '@/components/ArticleCard';
-import AdUnit from '@/components/AdUnit';
+import ArticleCard from '@/components/ArticleCard';
 import { TrendingUp } from 'lucide-react';
 import { generateMetadata as generateMeta } from '@/lib/metadata';
 import type { Metadata } from 'next';
@@ -46,7 +46,6 @@ export default async function Home() {
 
             {/* Sidebar - 1/3 width */}
             <div className="lg:col-span-1">
-              <AdUnit placement="sidebar_top" className="mb-6" />
               <div className="bg-white border border-slate-200 rounded-xl p-6">
                 <h2 className="text-xl font-bold text-navy mb-4 pb-3 border-b border-slate-200">
                   Latest Articles
