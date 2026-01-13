@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-verification-code', // TODO: Add actual verification code
     other: {
-      'google-adsense-account': 'ca-pub-9135303720365290',
+      'google-adsense-account': 'ca-pub-3761489603441542',
     },
   },
   robots: {
