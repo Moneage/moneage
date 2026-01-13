@@ -42,7 +42,7 @@ export default function MiniChart({ data, color, isPositive }: MiniChartProps) {
                             fontSize: '14px',
                             fontWeight: '700',
                         }}
-                        formatter={(value: number) => [`$${value.toLocaleString()}`, '']}
+                        formatter={(value: number | undefined) => value ? [`$${value.toLocaleString()}`, ''] : ['', '']}
                     />
                     <Line
                         type="monotone"
