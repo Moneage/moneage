@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getArticles, getCategories } from '@/lib/api';
 
 // Always use production URL for sitemap
-const SITE_URL = 'https://moneage.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://moneage.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemap: MetadataRoute.Sitemap = [];

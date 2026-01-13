@@ -1,4 +1,5 @@
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
 const SITE_NAME = 'Moneage';
 
 export function generateOrganizationSchema() {
@@ -27,7 +28,7 @@ export function generateArticleSchema(article: {
     slug: string;
 }) {
     const imageUrl = article.coverImage?.url
-        ? `http://localhost:1337${article.coverImage.url}`
+        ? `${STRAPI_URL}${article.coverImage.url}`
         : `${SITE_URL}/og-image.jpg`;
 
     return {
@@ -119,7 +120,11 @@ export function generatePersonSchema(author: {
     }
 
     if (author.avatar?.url) {
-        schema.image = `http://localhost:1337${author.avatar.url}`;
+        // We need to access the STRAPI_URL variable here, but it's defined at module scope. 
+        // To be safe and avoid redefining, we can use process.env directly or rely on the module scope var if visible. 
+        // Since I replaced the top of the file to add STRAPI_URL, I can use it here.
+        const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+        schema.image = `${strapiUrl}${author.avatar.url}`;
     }
 
     return schema;
