@@ -21,8 +21,7 @@
             "targetField": "title"
         },
         "content": {
-            "type": "customField",
-            "customField": "plugin::ckeditor.CKEditor"
+            "type": "blocks"
         },
         "excerpt": {
             "type": "text"
