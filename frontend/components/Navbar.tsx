@@ -81,6 +81,12 @@ export default function Navbar() {
                         Technology
                     </Link>
                     <Link
+                        href="/market-summary"
+                        className="px-4 py-2 text-slate-700 hover:text-navy font-medium rounded-lg hover:bg-slate-100 transition-colors whitespace-nowrap"
+                    >
+                        Market Summary
+                    </Link>
+                    <Link
                         href="/category/money"
                         className="px-4 py-2 text-slate-700 hover:text-navy font-medium rounded-lg hover:bg-slate-100 transition-colors whitespace-nowrap"
                     >
