@@ -34,7 +34,15 @@ export default {
           title: { edit: {}, list: { label: "title", searchable: true, sortable: true } },
           slug: { edit: {}, list: { label: "slug", searchable: true, sortable: true } },
           createdAt: { edit: {}, list: { label: "createdAt", searchable: true, sortable: true } },
-          updatedAt: { edit: {}, list: { label: "updatedAt", searchable: true, sortable: true } }
+          updatedAt: { edit: {}, list: { label: "updatedAt", searchable: true, sortable: true } },
+          content: { edit: { label: "content", description: "", placeholder: "", visible: true, editable: true }, list: {} },
+          excerpt: { edit: { label: "excerpt", description: "", placeholder: "", visible: true, editable: true }, list: {} },
+          coverImage: { edit: { label: "coverImage", description: "", placeholder: "", visible: true, editable: true }, list: {} },
+          category: { edit: { label: "category", description: "", placeholder: "", visible: true, editable: true }, list: {} },
+          author: { edit: { label: "author", description: "", placeholder: "", visible: true, editable: true }, list: {} },
+          aiTldr: { edit: { label: "aiTldr", description: "", placeholder: "", visible: true, editable: true }, list: {} },
+          aiMetaDescription: { edit: { label: "aiMetaDescription", description: "", placeholder: "", visible: true, editable: true }, list: {} },
+          aiKeywords: { edit: { label: "aiKeywords", description: "", placeholder: "", visible: true, editable: true }, list: {} }
         },
         layouts: {
           list: ["id", "title", "slug", "createdAt"],
