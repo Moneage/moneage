@@ -8,42 +8,54 @@ export default factories.createCoreController('api::article.article', ({ strapi 
     // Generate AI summary for an article
     async generateSummary(ctx) {
         const { id } = ctx.params;
+        const { content: bodyContent, title: bodyTitle, save = true } = ctx.request.body;
 
         try {
-            // Get article with all content
-            const article = await strapi.entityService.findOne(
-                'api::article.article',
-                id,
-                { populate: '*' }
-            );
+            let title = bodyTitle;
+            let content = bodyContent;
+            let excerpt = '';
 
-            if (!article) {
-                return ctx.notFound('Article not found');
+            // If content/title not provided, fetch from DB
+            if (!content || !title) {
+                const article = await strapi.entityService.findOne(
+                    'api::article.article',
+                    id,
+                    { populate: '*' }
+                );
+
+                if (!article) {
+                    return ctx.notFound('Article not found');
+                }
+                title = article.title;
+                content = article.content;
+                excerpt = article.excerpt;
             }
 
             // Generate AI summary using Gemini
             const summary = await generateAISummary(
-                article.title,
-                JSON.stringify(article.content),
-                article.excerpt
+                title,
+                typeof content === 'string' ? content : JSON.stringify(content),
+                excerpt
             );
 
-            // Update article with generated summary
-            const updatedArticle = await strapi.entityService.update(
-                'api::article.article',
-                id,
-                {
-                    data: {
-                        aiTldr: summary.tldr,
-                        aiMetaDescription: summary.metaDescription,
-                        aiKeywords: summary.keywords.join(', '),
-                    } as any,
-                }
-            );
+            // Update article with generated summary ONLY if save is true
+            if (save && id) {
+                await strapi.entityService.update(
+                    'api::article.article',
+                    id,
+                    {
+                        data: {
+                            aiTldr: summary.tldr,
+                            aiMetaDescription: summary.metaDescription,
+                            aiKeywords: summary.keywords.join(', '),
+                        } as any,
+                    }
+                );
+            }
 
             ctx.body = {
                 success: true,
-                summary: {
+                data: {
                     aiTldr: summary.tldr,
                     aiMetaDescription: summary.metaDescription,
                     aiKeywords: summary.keywords.join(', '),
