@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, RefreshCw, Sparkles, Activity, DollarSign } from 'lucide-react';
+import MiniChart from '@/components/MiniChart';
 
 interface MarketIndex {
     value: string;
     change: string;
     changePercent: string;
+    chartData?: Array<{ date: string; value: number }>;
 }
 
 interface Stock {
@@ -224,6 +226,10 @@ function IndexCard({ name, symbol, data, isVix = false }: { name: string; symbol
         ? (isPositive ? 'text-red-600' : 'text-green-600')
         : (isPositive ? 'text-green-600' : 'text-red-600');
 
+    const chartColor = isVix
+        ? (isPositive ? '#dc2626' : '#16a34a')
+        : (isPositive ? '#16a34a' : '#dc2626');
+
     return (
         <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-200 hover:shadow-xl transition-shadow">
             <div className="flex justify-between items-start mb-4">
@@ -240,7 +246,7 @@ function IndexCard({ name, symbol, data, isVix = false }: { name: string; symbol
             <div className="text-3xl font-bold text-slate-900 mb-2">
                 {parseFloat(data.value).toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </div>
-            <div className={`flex items-center gap-2 ${colorClass}`}>
+            <div className={`flex items-center gap-2 ${colorClass} mb-3`}>
                 <span className="font-semibold">
                     {isPositive ? '+' : ''}{data.change}
                 </span>
@@ -248,6 +254,18 @@ function IndexCard({ name, symbol, data, isVix = false }: { name: string; symbol
                     ({isPositive ? '+' : ''}{data.changePercent}%)
                 </span>
             </div>
+
+            {/* 5-Day Chart */}
+            {data.chartData && data.chartData.length > 0 && (
+                <div className="border-t border-slate-100 pt-3">
+                    <p className="text-xs text-slate-500 mb-1">5-Day Trend</p>
+                    <MiniChart
+                        data={data.chartData}
+                        color={chartColor}
+                        isPositive={!isVix ? isPositive : !isPositive}
+                    />
+                </div>
+            )}
         </div>
     );
 }

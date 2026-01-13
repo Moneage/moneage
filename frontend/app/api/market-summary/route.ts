@@ -80,8 +80,9 @@ async function fetchIndices() {
     try {
         // Fetch data for each index
         for (const symbol of symbols) {
+            // Fetch 5-day data for charts
             const response = await fetch(
-                `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`,
+                `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=5d`,
                 { next: { revalidate: 3600 } } // Cache for 1 hour
             );
             const data = await response.json();
@@ -93,6 +94,15 @@ async function fetchIndices() {
             const change = current - previous;
             const changePercent = (change / previous) * 100;
 
+            // Extract historical data for charts
+            const timestamps = quote.timestamp || [];
+            const prices = quote.indicators.quote[0].close || [];
+
+            const chartData = timestamps.map((timestamp: number, index: number) => ({
+                date: new Date(timestamp * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                value: prices[index] ? parseFloat(prices[index].toFixed(2)) : null,
+            })).filter((item: any) => item.value !== null);
+
             let key = 'sp500';
             if (symbol === '^GSPC') key = 'sp500';
             else if (symbol === '^DJI') key = 'dow';
@@ -103,16 +113,17 @@ async function fetchIndices() {
                 value: current.toFixed(2),
                 change: change.toFixed(2),
                 changePercent: changePercent.toFixed(2),
+                chartData, // Add historical data
             };
         }
     } catch (error) {
         console.error('Error fetching indices:', error);
         // Return mock data as fallback
         return {
-            sp500: { value: '4500.00', change: '15.50', changePercent: '0.35' },
-            dow: { value: '35000.00', change: '120.00', changePercent: '0.34' },
-            nasdaq: { value: '14000.00', change: '-25.00', changePercent: '-0.18' },
-            vix: { value: '18.50', change: '-0.75', changePercent: '-3.90' },
+            sp500: { value: '4500.00', change: '15.50', changePercent: '0.35', chartData: [] },
+            dow: { value: '35000.00', change: '120.00', changePercent: '0.34', chartData: [] },
+            nasdaq: { value: '14000.00', change: '-25.00', changePercent: '-0.18', chartData: [] },
+            vix: { value: '18.50', change: '-0.75', changePercent: '-3.90', chartData: [] },
         };
     }
 
