@@ -6,7 +6,7 @@ const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 export async function POST(request: Request) {
     try {
-        const { title, content, excerpt } = await request.json();
+        const { articleId, title, content, excerpt } = await request.json();
 
         if (!title || !content) {
             return NextResponse.json(
@@ -29,6 +29,11 @@ export async function POST(request: Request) {
 
         // Generate AI summary
         const summary = await generateAISummary(title, content, excerpt);
+
+        // Save to Strapi if articleId is provided
+        if (articleId) {
+            await saveSummaryToStrapi(articleId, summary);
+        }
 
         // Update cache
         summaryCache.set(cacheKey, {
@@ -143,4 +148,42 @@ function generateFallbackSummary(title: string, excerpt?: string) {
         metaDescription: metaDescription.substring(0, 160),
         keywords: title.toLowerCase().split(' ').filter(w => w.length > 3).slice(0, 5),
     };
+}
+
+async function saveSummaryToStrapi(articleId: number, summary: any) {
+    const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+    const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
+
+    if (!STRAPI_API_TOKEN) {
+        console.warn('STRAPI_API_TOKEN not set, cannot save summary to Strapi');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/articles/${articleId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${STRAPI_API_TOKEN}`,
+            },
+            body: JSON.stringify({
+                data: {
+                    aiSummary: {
+                        tldr: summary.tldr,
+                        metaDescription: summary.metaDescription,
+                        keywords: summary.keywords,
+                        generatedAt: new Date().toISOString(),
+                    },
+                },
+            }),
+        });
+
+        if (!response.ok) {
+            console.error('Failed to save summary to Strapi:', response.status);
+        } else {
+            console.log('Summary saved to Strapi successfully');
+        }
+    } catch (error) {
+        console.error('Error saving summary to Strapi:', error);
+    }
 }

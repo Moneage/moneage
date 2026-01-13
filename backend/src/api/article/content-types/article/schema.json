@@ -45,6 +45,10 @@
             "relation": "manyToOne",
             "target": "api::author.author",
             "inversedBy": "articles"
+        },
+        "aiSummary": {
+            "type": "json",
+            "required": false
         }
     }
 }

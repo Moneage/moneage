@@ -4,9 +4,15 @@ import { useState, useEffect } from 'react';
 import { Sparkles, Loader2 } from 'lucide-react';
 
 interface ArticleSummaryProps {
+    articleId: number;
     title: string;
     content: string;
     excerpt?: string;
+    storedSummary?: {
+        tldr: string;
+        metaDescription: string;
+        keywords: string[];
+    } | null;
 }
 
 interface Summary {
@@ -16,12 +22,19 @@ interface Summary {
     cached?: boolean;
 }
 
-export default function ArticleSummary({ title, content, excerpt }: ArticleSummaryProps) {
-    const [summary, setSummary] = useState<Summary | null>(null);
-    const [loading, setLoading] = useState(true);
+export default function ArticleSummary({ articleId, title, content, excerpt, storedSummary }: ArticleSummaryProps) {
+    const [summary, setSummary] = useState<Summary | null>(storedSummary || null);
+    const [loading, setLoading] = useState(!storedSummary);
     const [error, setError] = useState(false);
 
     useEffect(() => {
+        // If we already have a stored summary, don't generate a new one
+        if (storedSummary) {
+            setSummary(storedSummary);
+            setLoading(false);
+            return;
+        }
+
         async function fetchSummary() {
             try {
                 const response = await fetch('/api/generate-summary', {
@@ -30,6 +43,7 @@ export default function ArticleSummary({ title, content, excerpt }: ArticleSumma
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
+                        articleId,
                         title,
                         content,
                         excerpt,
@@ -51,7 +65,7 @@ export default function ArticleSummary({ title, content, excerpt }: ArticleSumma
         }
 
         fetchSummary();
-    }, [title, content, excerpt]);
+    }, [articleId, title, content, excerpt, storedSummary]);
 
     if (loading) {
         return (
