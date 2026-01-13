@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, RefreshCw, Sparkles } from 'lucide-react';
+import { TrendingUp, TrendingDown, RefreshCw, Sparkles, Activity, DollarSign } from 'lucide-react';
 
 interface MarketIndex {
     value: string;
@@ -17,12 +17,29 @@ interface Stock {
     changePercent: string;
 }
 
+interface Sector {
+    symbol: string;
+    name: string;
+    changePercent: string;
+}
+
+interface Commodity {
+    symbol: string;
+    name: string;
+    value: string;
+    change: string;
+    changePercent: string;
+}
+
 interface MarketData {
     indices: {
         sp500: MarketIndex;
         dow: MarketIndex;
         nasdaq: MarketIndex;
+        vix: MarketIndex;
     };
+    sectors: Sector[];
+    commodities: Commodity[];
     topGainers: Stock[];
     topLosers: Stock[];
     aiSummary: string;
@@ -64,16 +81,12 @@ export default function MarketSummaryPage() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="animate-pulse">
                         <div className="h-12 bg-slate-200 rounded w-1/3 mb-8"></div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            {[1, 2, 3].map(i => (
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                            {[1, 2, 3, 4].map(i => (
                                 <div key={i} className="h-32 bg-slate-200 rounded-xl"></div>
                             ))}
                         </div>
                         <div className="h-48 bg-slate-200 rounded-xl mb-8"></div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="h-64 bg-slate-200 rounded-xl"></div>
-                            <div className="h-64 bg-slate-200 rounded-xl"></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -129,23 +142,38 @@ export default function MarketSummaryPage() {
                     </button>
                 </div>
 
-                {/* Major Indices */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <IndexCard
-                        name="S&P 500"
-                        symbol="^GSPC"
-                        data={data.indices.sp500}
-                    />
-                    <IndexCard
-                        name="Dow Jones"
-                        symbol="^DJI"
-                        data={data.indices.dow}
-                    />
-                    <IndexCard
-                        name="Nasdaq"
-                        symbol="^IXIC"
-                        data={data.indices.nasdaq}
-                    />
+                {/* Major Indices + VIX */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <IndexCard name="S&P 500" symbol="^GSPC" data={data.indices.sp500} />
+                    <IndexCard name="Dow Jones" symbol="^DJI" data={data.indices.dow} />
+                    <IndexCard name="Nasdaq" symbol="^IXIC" data={data.indices.nasdaq} />
+                    <IndexCard name="VIX (Fear)" symbol="^VIX" data={data.indices.vix} isVix={true} />
+                </div>
+
+                {/* Sector Performance */}
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-200 mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Activity className="w-6 h-6 text-indigo-600" />
+                        <h2 className="text-2xl font-bold text-slate-900">Sector Performance</h2>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                        {data.sectors.map((sector) => (
+                            <SectorCard key={sector.symbol} sector={sector} />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Commodities */}
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-200 mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                        <DollarSign className="w-6 h-6 text-yellow-600" />
+                        <h2 className="text-2xl font-bold text-slate-900">Commodities & Crypto</h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {data.commodities.map((commodity) => (
+                            <CommodityCard key={commodity.symbol} commodity={commodity} />
+                        ))}
+                    </div>
                 </div>
 
                 {/* Market Summaries - Side by Side */}
@@ -181,24 +209,20 @@ export default function MarketSummaryPage() {
 
                 {/* Top Movers */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <MoversCard
-                        title="Top Gainers"
-                        stocks={data.topGainers}
-                        type="gainers"
-                    />
-                    <MoversCard
-                        title="Top Losers"
-                        stocks={data.topLosers}
-                        type="losers"
-                    />
+                    <MoversCard title="Top Gainers" stocks={data.topGainers} type="gainers" />
+                    <MoversCard title="Top Losers" stocks={data.topLosers} type="losers" />
                 </div>
             </div>
         </div>
     );
 }
 
-function IndexCard({ name, symbol, data }: { name: string; symbol: string; data: MarketIndex }) {
+function IndexCard({ name, symbol, data, isVix = false }: { name: string; symbol: string; data: MarketIndex; isVix?: boolean }) {
     const isPositive = parseFloat(data.change) >= 0;
+    // For VIX, lower is better (inverse)
+    const colorClass = isVix
+        ? (isPositive ? 'text-red-600' : 'text-green-600')
+        : (isPositive ? 'text-green-600' : 'text-red-600');
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-200 hover:shadow-xl transition-shadow">
@@ -208,20 +232,64 @@ function IndexCard({ name, symbol, data }: { name: string; symbol: string; data:
                     <p className="text-sm text-slate-500">{symbol}</p>
                 </div>
                 {isPositive ? (
-                    <TrendingUp className="w-6 h-6 text-green-600" />
+                    <TrendingUp className={`w-6 h-6 ${colorClass}`} />
                 ) : (
-                    <TrendingDown className="w-6 h-6 text-red-600" />
+                    <TrendingDown className={`w-6 h-6 ${colorClass}`} />
                 )}
             </div>
             <div className="text-3xl font-bold text-slate-900 mb-2">
                 {parseFloat(data.value).toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </div>
-            <div className={`flex items-center gap-2 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+            <div className={`flex items-center gap-2 ${colorClass}`}>
                 <span className="font-semibold">
                     {isPositive ? '+' : ''}{data.change}
                 </span>
                 <span className="text-sm">
                     ({isPositive ? '+' : ''}{data.changePercent}%)
+                </span>
+            </div>
+        </div>
+    );
+}
+
+function SectorCard({ sector }: { sector: Sector }) {
+    const isPositive = parseFloat(sector.changePercent) >= 0;
+
+    return (
+        <div className={`p-3 rounded-lg border-2 ${isPositive ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+            <div className="text-xs font-medium text-slate-600 mb-1">{sector.name}</div>
+            <div className={`text-lg font-bold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                {isPositive ? '+' : ''}{sector.changePercent}%
+            </div>
+        </div>
+    );
+}
+
+function CommodityCard({ commodity }: { commodity: Commodity }) {
+    const isPositive = parseFloat(commodity.change) >= 0;
+
+    return (
+        <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-4">
+            <div className="flex justify-between items-start mb-2">
+                <div>
+                    <h3 className="font-semibold text-slate-900">{commodity.name}</h3>
+                    <p className="text-xs text-slate-500">{commodity.symbol}</p>
+                </div>
+                {isPositive ? (
+                    <TrendingUp className="w-5 h-5 text-green-600" />
+                ) : (
+                    <TrendingDown className="w-5 h-5 text-red-600" />
+                )}
+            </div>
+            <div className="text-2xl font-bold text-slate-900 mb-1">
+                ${parseFloat(commodity.value).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            </div>
+            <div className={`flex items-center gap-2 text-sm ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                <span className="font-semibold">
+                    {isPositive ? '+' : ''}{commodity.change}
+                </span>
+                <span>
+                    ({isPositive ? '+' : ''}{commodity.changePercent}%)
                 </span>
             </div>
         </div>

@@ -26,6 +26,8 @@ export async function GET() {
 
         const response = {
             indices: marketData.indices,
+            sectors: marketData.sectors,
+            commodities: marketData.commodities,
             topGainers: marketData.topGainers,
             topLosers: marketData.topLosers,
             aiSummary,
@@ -49,14 +51,22 @@ export async function GET() {
 }
 
 async function fetchMarketData() {
-    // Fetch major indices
+    // Fetch major indices (including VIX)
     const indices = await fetchIndices();
+
+    // Fetch sector performance
+    const sectors = await fetchSectors();
+
+    // Fetch commodities
+    const commodities = await fetchCommodities();
 
     // Fetch top movers (gainers/losers)
     const movers = await fetchTopMovers();
 
     return {
         indices,
+        sectors,
+        commodities,
         topGainers: movers.gainers,
         topLosers: movers.losers,
     };
@@ -64,7 +74,7 @@ async function fetchMarketData() {
 
 async function fetchIndices() {
     // Using Yahoo Finance API (free alternative)
-    const symbols = ['^GSPC', '^DJI', '^IXIC']; // S&P 500, Dow, Nasdaq
+    const symbols = ['^GSPC', '^DJI', '^IXIC', '^VIX']; // Added VIX
     const indices: any = {};
 
     try {
@@ -83,7 +93,12 @@ async function fetchIndices() {
             const change = current - previous;
             const changePercent = (change / previous) * 100;
 
-            const key = symbol === '^GSPC' ? 'sp500' : symbol === '^DJI' ? 'dow' : 'nasdaq';
+            let key = 'sp500';
+            if (symbol === '^GSPC') key = 'sp500';
+            else if (symbol === '^DJI') key = 'dow';
+            else if (symbol === '^IXIC') key = 'nasdaq';
+            else if (symbol === '^VIX') key = 'vix';
+
             indices[key] = {
                 value: current.toFixed(2),
                 change: change.toFixed(2),
@@ -97,10 +112,113 @@ async function fetchIndices() {
             sp500: { value: '4500.00', change: '15.50', changePercent: '0.35' },
             dow: { value: '35000.00', change: '120.00', changePercent: '0.34' },
             nasdaq: { value: '14000.00', change: '-25.00', changePercent: '-0.18' },
+            vix: { value: '18.50', change: '-0.75', changePercent: '-3.90' },
         };
     }
 
     return indices;
+}
+
+async function fetchSectors() {
+    // Sector ETF symbols
+    const sectorETFs = {
+        'XLK': 'Technology',
+        'XLF': 'Financials',
+        'XLV': 'Healthcare',
+        'XLE': 'Energy',
+        'XLI': 'Industrials',
+        'XLY': 'Consumer Discretionary',
+        'XLP': 'Consumer Staples',
+        'XLB': 'Materials',
+        'XLRE': 'Real Estate',
+        'XLU': 'Utilities',
+        'XLC': 'Communication Services',
+    };
+
+    const sectors: any[] = [];
+
+    try {
+        for (const [symbol, name] of Object.entries(sectorETFs)) {
+            const response = await fetch(
+                `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`,
+                { next: { revalidate: 3600 } }
+            );
+            const data = await response.json();
+
+            const quote = data.chart.result[0];
+            const meta = quote.meta;
+            const current = meta.regularMarketPrice;
+            const previous = meta.chartPreviousClose;
+            const change = current - previous;
+            const changePercent = (change / previous) * 100;
+
+            sectors.push({
+                symbol,
+                name,
+                changePercent: changePercent.toFixed(2),
+            });
+        }
+
+        // Sort by performance
+        sectors.sort((a, b) => parseFloat(b.changePercent) - parseFloat(a.changePercent));
+    } catch (error) {
+        console.error('Error fetching sectors:', error);
+        // Return mock data
+        return [
+            { symbol: 'XLK', name: 'Technology', changePercent: '1.25' },
+            { symbol: 'XLF', name: 'Financials', changePercent: '0.85' },
+            { symbol: 'XLV', name: 'Healthcare', changePercent: '0.45' },
+            { symbol: 'XLE', name: 'Energy', changePercent: '-0.35' },
+            { symbol: 'XLI', name: 'Industrials', changePercent: '-0.55' },
+        ];
+    }
+
+    return sectors;
+}
+
+async function fetchCommodities() {
+    const commoditySymbols = {
+        'GC=F': 'Gold',
+        'CL=F': 'Crude Oil',
+        'BTC-USD': 'Bitcoin',
+    };
+
+    const commodities: any[] = [];
+
+    try {
+        for (const [symbol, name] of Object.entries(commoditySymbols)) {
+            const response = await fetch(
+                `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`,
+                { next: { revalidate: 3600 } }
+            );
+            const data = await response.json();
+
+            const quote = data.chart.result[0];
+            const meta = quote.meta;
+            const current = meta.regularMarketPrice;
+            const previous = meta.chartPreviousClose;
+            const change = current - previous;
+            const changePercent = (change / previous) * 100;
+
+            commodities.push({
+                symbol,
+                name,
+                value: current.toFixed(2),
+                change: change.toFixed(2),
+                changePercent: changePercent.toFixed(2),
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching commodities:', error);
+        // Return mock data
+        return [
+            { symbol: 'GC=F', name: 'Gold', value: '2050.00', change: '12.50', changePercent: '0.61' },
+            { symbol: 'CL=F', name: 'Crude Oil', value: '75.50', change: '-1.25', changePercent: '-1.63' },
+            { symbol: 'BTC-USD', name: 'Bitcoin', value: '45000.00', change: '850.00', changePercent: '1.93' },
+        ];
+    }
+
+    return commodities;
 }
 
 async function fetchTopMovers() {
