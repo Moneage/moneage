@@ -9,6 +9,7 @@ interface AdUnitProps {
     responsive?: boolean;
     style?: React.CSSProperties;
     layoutKey?: string;
+    placement?: string;
 }
 
 const AdUnit = ({
@@ -17,7 +18,8 @@ const AdUnit = ({
     format = 'auto',
     responsive = true,
     style = { display: 'block' },
-    layoutKey
+    layoutKey,
+    placement
 }: AdUnitProps) => {
     const adRef = useRef<HTMLModElement>(null);
 
