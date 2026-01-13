@@ -1,28 +1,10 @@
 import Link from 'next/link';
-import { Twitter, Linkedin, Github, Mail } from 'lucide-react';
-import NewsletterForm from './NewsletterForm';
+import { Twitter, Linkedin, Github } from 'lucide-react';
 
 export default function Footer() {
     return (
         <footer className="bg-navy text-white mt-16">
             <div className="container mx-auto px-4 py-12">
-                {/* Newsletter Section */}
-                <div id="newsletter" className="bg-gradient-to-r from-blue-800 to-blue-900 rounded-2xl p-8 mb-12 text-center">
-                    <div className="max-w-2xl mx-auto">
-                        <div className="bg-yellow-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Mail className="w-8 h-8 text-navy" />
-                        </div>
-                        <h3 className="text-2xl md:text-3xl font-bold mb-3">Stay Ahead of the Market</h3>
-                        <p className="text-blue-100 mb-6">
-                            Get expert financial insights, market analysis, and investment tips delivered to your inbox.
-                        </p>
-                        <NewsletterForm />
-                        <p className="text-xs text-blue-200 mt-4">
-                            Join 1,000+ subscribers. Unsubscribe anytime.
-                        </p>
-                    </div>
-                </div>
-
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
                     {/* Brand */}
                     <div className="col-span-2 md:col-span-1">
