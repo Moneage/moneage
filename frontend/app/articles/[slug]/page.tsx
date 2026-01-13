@@ -14,8 +14,8 @@ import ArticleActions from '@/components/ArticleActions';
 
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
-import ArticleSummary from '@/components/ArticleSummary';
 import AdUnit from '@/components/AdUnit';
+import ArticleSummary from '@/components/ArticleSummary';
 
 export const revalidate = 300; // Revalidate every 5 minutes
 
@@ -275,8 +275,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     )}
                 </ArticleReader>
 
-                {/* Advertisement */}
-                <AdUnit className="mb-12" />
+                <AdUnit placement="article_bottom" className="mb-8" />
 
                 {/* Bottom Actions */}
                 <div className="flex items-center justify-between py-6 border-t border-b border-slate-200 mb-12">

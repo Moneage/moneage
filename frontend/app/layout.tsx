@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -8,7 +7,7 @@ import { defaultMetadata } from "@/lib/metadata";
 import StructuredData from "@/components/StructuredData";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/schema";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-
+import GoogleAdSense from "@/components/GoogleAdSense";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-verification-code', // TODO: Add actual verification code
     other: {
-      'google-adsense-account': 'ca-pub-3761489603441542',
+      'google-adsense-account': 'ca-pub-9135303720365290',
     },
   },
   robots: {
@@ -58,12 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3761489603441542"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <GoogleAdSense />
         <StructuredData data={generateOrganizationSchema()} />
         <StructuredData data={generateWebsiteSchema()} />
       </head>
