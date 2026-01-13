@@ -199,7 +199,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 {/* AI-Generated TL;DR Summary */}
                 <ArticleSummary
                     title={article.title}
-                    content={article.content}
+                    content={JSON.stringify(article.content)}
                     excerpt={article.excerpt}
                 />
 
