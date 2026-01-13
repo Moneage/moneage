@@ -7,7 +7,7 @@ import { defaultMetadata } from "@/lib/metadata";
 import StructuredData from "@/components/StructuredData";
 import { generateOrganizationSchema, generateWebsiteSchema } from "@/lib/schema";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import GoogleAdSense from "@/components/GoogleAdSense";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,7 +57,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <GoogleAdSense />
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3761489603441542"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <StructuredData data={generateOrganizationSchema()} />
         <StructuredData data={generateWebsiteSchema()} />
       </head>
