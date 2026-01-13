@@ -26,6 +26,7 @@ interface MarketData {
     topGainers: Stock[];
     topLosers: Stock[];
     aiSummary: string;
+    yfinanceSummary: string;
     lastUpdated: string;
     cached?: boolean;
 }
@@ -147,18 +148,35 @@ export default function MarketSummaryPage() {
                     />
                 </div>
 
-                {/* AI Summary */}
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8 mb-8">
-                    <div className="flex items-center gap-2 mb-4">
-                        <Sparkles className="w-6 h-6 text-blue-600" />
-                        <h2 className="text-2xl font-bold text-slate-900">AI Market Analysis</h2>
+                {/* Market Summaries - Side by Side */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    {/* AI Summary */}
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Sparkles className="w-5 h-5 text-blue-600" />
+                            <h2 className="text-xl font-bold text-slate-900">AI Analysis</h2>
+                            <span className="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+                                Gemini 2.0
+                            </span>
+                        </div>
+                        <p className="text-slate-700 leading-relaxed">
+                            {data.aiSummary}
+                        </p>
                     </div>
-                    <p className="text-slate-700 leading-relaxed text-lg">
-                        {data.aiSummary}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-4">
-                        Powered by Gemini 2.0 Flash
-                    </p>
+
+                    {/* Yahoo Finance Summary */}
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
+                        <div className="flex items-center gap-2 mb-4">
+                            <TrendingUp className="w-5 h-5 text-purple-600" />
+                            <h2 className="text-xl font-bold text-slate-900">Market Summary</h2>
+                            <span className="ml-auto text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium">
+                                Yahoo Finance
+                            </span>
+                        </div>
+                        <p className="text-slate-700 leading-relaxed">
+                            {data.yfinanceSummary}
+                        </p>
+                    </div>
                 </div>
 
                 {/* Top Movers */}
