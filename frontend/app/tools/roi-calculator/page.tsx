@@ -5,7 +5,6 @@ import { calculateROI } from '@/lib/calculators/roi';
 import CalculatorInput from '@/components/calculators/CalculatorInput';
 import DonutChart from '@/components/calculators/DonutChart';
 import { RefreshCw, TrendingUp, DollarSign } from 'lucide-react';
-import ArticleNewsletterCTA from '@/components/ArticleNewsletterCTA';
 import type { Metadata } from 'next';
 
 const currencies = [

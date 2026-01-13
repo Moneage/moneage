@@ -46,19 +46,6 @@ export default function Navbar() {
                             />
                         </div>
                     </form>
-
-                    {/* Subscribe Button */}
-                    <button
-                        onClick={() => {
-                            const newsletter = document.getElementById('newsletter');
-                            if (newsletter) {
-                                newsletter.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }
-                        }}
-                        className="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-6 py-2.5 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg whitespace-nowrap"
-                    >
-                        Subscribe
-                    </button>
                 </div>
 
                 {/* Navigation Links */}

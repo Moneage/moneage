@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import ArticleNewsletterCTA from '@/components/ArticleNewsletterCTA';
 import { Plus, RefreshCw, AlertCircle } from 'lucide-react';
 import { StockHolding } from '@/lib/portfolio/types';
 import { getPortfolio, updatePrices } from '@/lib/portfolio/portfolioStorage';
@@ -166,8 +165,6 @@ export default function PortfolioPage() {
                     </div>
                 )}
 
-                {/* Newsletter CTA */}
-                <ArticleNewsletterCTA />
             </div>
         </div>
     );

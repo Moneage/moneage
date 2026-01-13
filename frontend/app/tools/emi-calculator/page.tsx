@@ -5,7 +5,6 @@ import { calculateEMI } from '@/lib/calculators';
 import CalculatorInput from '@/components/calculators/CalculatorInput';
 import DonutChart from '@/components/calculators/DonutChart';
 import { Landmark, TrendingUp, IndianRupee } from 'lucide-react';
-import ArticleNewsletterCTA from '@/components/ArticleNewsletterCTA';
 
 export default function EMICalculator() {
     const [loanAmount, setLoanAmount] = useState(50000); // Default $50,000
@@ -139,8 +138,6 @@ export default function EMICalculator() {
                 </p>
             </div>
 
-            {/* Newsletter CTA */}
-            <ArticleNewsletterCTA />
         </div>
     );
 }
