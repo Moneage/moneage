@@ -37,7 +37,7 @@ export default factories.createCoreController('api::article.article', ({ strapi 
                         aiTldr: summary.tldr,
                         aiMetaDescription: summary.metaDescription,
                         aiKeywords: summary.keywords.join(', '),
-                    },
+                    } as any,
                 }
             );
 
@@ -108,7 +108,7 @@ Keep the TL;DR engaging and informative. Make the meta description compelling fo
         }
 
         const data = await response.json();
-        const aiResponse = data.candidates[0].content.parts[0].text;
+        const aiResponse = (data as any).candidates[0].content.parts[0].text;
 
         try {
             const cleanedResponse = aiResponse
