@@ -2,7 +2,7 @@ import crypto from 'crypto';
 
 export default {
   async afterCreate(event) {
-    const { result } = event;
+    const { result, params } = event;
 
     // Generate secure tokens
     const confirmationToken = crypto.randomBytes(32).toString('hex');
@@ -17,8 +17,8 @@ export default {
         isConfirmed: false,
         isActive: false, // Inactive until confirmed
         metadata: {
-          ipAddress: event.params?.data?.ipAddress || null,
-          userAgent: event.params?.data?.userAgent || null,
+          ipAddress: params?.data?.ipAddress || null,
+          userAgent: params?.data?.userAgent || null,
           subscribedAt: new Date().toISOString()
         }
       }
@@ -95,7 +95,7 @@ If you didn't sign up for this newsletter, you can safely ignore this email.
       });
     } catch (err) {
       console.error('Failed to send confirmation email:', err);
+      // Don't throw error - allow subscriber creation to succeed even if email fails
     }
   },
 };
-
