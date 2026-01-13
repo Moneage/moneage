@@ -32,9 +32,9 @@ export default {
         ],
     },
     bootstrap(app: any) {
-        app.injectContentManagerComponent('editView', 'right-links', {
-            name: 'generate-summary-button',
-            Component: GenerateSummary,
-        });
+        // app.injectContentManagerComponent('editView', 'right-links', {
+        //     name: 'generate-summary-button',
+        //     Component: GenerateSummary,
+        // });
     },
 };
