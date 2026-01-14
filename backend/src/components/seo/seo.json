@@ -1,0 +1,21 @@
+{
+    "collectionName": "components_seo_seos",
+    "info": {
+        "displayName": "SEO",
+        "description": "Custom SEO metadata for better search engine optimization"
+    },
+    "options": {},
+    "attributes": {
+        "metaTitle": {
+            "type": "string",
+            "maxLength": 60
+        },
+        "metaDescription": {
+            "type": "text",
+            "maxLength": 160
+        },
+        "keywords": {
+            "type": "string"
+        }
+    }
+}

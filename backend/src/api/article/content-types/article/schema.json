@@ -45,6 +45,11 @@
             "relation": "manyToOne",
             "target": "api::author.author",
             "inversedBy": "articles"
+        },
+        "seo": {
+            "type": "component",
+            "repeatable": false,
+            "component": "seo.seo"
         }
     }
 }

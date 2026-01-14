@@ -55,6 +55,11 @@ export interface Article {
     coverImage: Image | null;
     category: Category | null;
     author: Author | null;
+    seo?: {
+        metaTitle?: string;
+        metaDescription?: string;
+        keywords?: string;
+    };
 
 }
 

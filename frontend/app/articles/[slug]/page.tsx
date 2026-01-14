@@ -74,10 +74,17 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
         ? `http://localhost:1337${article.coverImage.url}`
         : undefined;
 
+    // Use custom SEO fields if available, otherwise fallback to article fields
+    const metaTitle = article.seo?.metaTitle || article.title;
+    const metaDescription = article.seo?.metaDescription || article.excerpt || article.title;
+    const metaKeywords = article.seo?.keywords
+        ? article.seo.keywords.split(',').map(k => k.trim())
+        : (article.category ? [article.category.name, 'finance', 'investing'] : ['finance']);
+
     return generateMeta({
-        title: article.title,
-        description: article.excerpt || article.title,
-        keywords: article.category ? [article.category.name, 'finance', 'investing'] : ['finance'],
+        title: metaTitle,
+        description: metaDescription,
+        keywords: metaKeywords,
         image: imageUrl,
         url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/articles/${article.slug}`,
         type: 'article',
