@@ -5,6 +5,7 @@ import { calculateSIP } from '@/lib/calculators';
 import CalculatorInput from '@/components/calculators/CalculatorInput';
 import DonutChart from '@/components/calculators/DonutChart';
 import { RefreshCw, TrendingUp, IndianRupee } from 'lucide-react';
+import { trackCalculatorUse } from '@/lib/analytics';
 
 export default function SIPCalculator() {
     const [monthlyInvestment, setMonthlyInvestment] = useState(5000);
