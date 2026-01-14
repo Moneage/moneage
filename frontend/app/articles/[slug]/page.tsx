@@ -14,6 +14,8 @@ import ArticleActions from '@/components/ArticleActions';
 
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
+import Breadcrumb from '@/components/Breadcrumb';
+import ScrollTracker from '@/components/ScrollTracker';
 
 
 // Helper to render inline content (bold, italic, links)
@@ -161,21 +163,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 return faqs.length > 0 ? <StructuredData data={generateFAQSchema(faqs)} /> : null;
             })()}
 
+            {/* Scroll Tracker for GA4 */}
+            <ScrollTracker articleTitle={article.title} />
+
             <article className="max-w-4xl mx-auto">
-                {/* Breadcrumb */}
-                <nav className="flex items-center gap-2 text-sm text-slate-600 mb-8">
-                    <a href="/" className="hover:text-blue-900 transition-colors">Home</a>
-                    <span>/</span>
-                    {article.category && (
-                        <>
-                            <a href={`/category/${article.category.slug}`} className="hover:text-blue-900 transition-colors capitalize">
-                                {article.category.name}
-                            </a>
-                            <span>/</span>
-                        </>
-                    )}
-                    <span className="text-slate-400 truncate">{article.title}</span>
-                </nav>
+                {/* Breadcrumb Navigation */}
+                <Breadcrumb items={breadcrumbItems.map(item => ({ name: item.name, url: item.url }))} />
 
                 {/* Header */}
                 <header className="mb-10">

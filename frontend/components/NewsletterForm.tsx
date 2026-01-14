@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { trackNewsletterSignup } from '@/lib/analytics';
 
 export default function NewsletterForm() {
     const [email, setEmail] = useState('');
@@ -28,6 +29,7 @@ export default function NewsletterForm() {
                 setStatus('success');
                 setMessage('Please check your email to confirm your subscription!');
                 setEmail('');
+                trackNewsletterSignup('homepage_cta'); // Track GA4 event
             } else {
                 setStatus('error');
                 setMessage(data.error || 'Something went wrong');

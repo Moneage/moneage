@@ -22,6 +22,10 @@ export default function SIPCalculator() {
 
     useEffect(() => {
         setResults(calculateSIP(monthlyInvestment, rate, years));
+        // Track calculator usage
+        if (monthlyInvestment > 0) {
+            trackCalculatorUse('SIP', 'calculate');
+        }
     }, [monthlyInvestment, rate, years]);
 
     const chartData = [
