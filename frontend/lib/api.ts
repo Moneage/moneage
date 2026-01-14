@@ -56,7 +56,7 @@ export async function fetchAPI<T>(
 
 export async function getArticles(params = {}) {
     const defaultParams = {
-        populate: ['coverImage', 'category', 'author.avatar'],
+        populate: ['coverImage', 'category', 'author.avatar', 'seo'],
         sort: ['publishedAt:desc'],
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', {
@@ -68,7 +68,7 @@ export async function getArticles(params = {}) {
 export async function getArticleBySlug(slug: string) {
     const params = {
         filters: { slug },
-        populate: ['coverImage', 'category', 'author.avatar'],
+        populate: ['coverImage', 'category', 'author.avatar', 'seo'],
     };
     const data = await fetchAPI<StrapiResponse<Article[]>>('/articles', params);
     return data.data[0];
@@ -95,7 +95,7 @@ export async function getArticlesByCategory(slug: string) {
                 }
             }
         },
-        populate: ['coverImage', 'category', 'author.avatar'],
+        populate: ['coverImage', 'category', 'author.avatar', 'seo'],
         sort: ['publishedAt:desc'],
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', params);
@@ -122,7 +122,7 @@ export async function searchArticles(query: string) {
                 },
             ],
         },
-        populate: ['coverImage', 'category', 'author.avatar'],
+        populate: ['coverImage', 'category', 'author.avatar', 'seo'],
         sort: ['publishedAt:desc'],
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', params);
