@@ -77,14 +77,7 @@ export default function ContactPage() {
                     </button>
                 </form>
 
-                <div className="mt-8 pt-8 border-t border-slate-200">
-                    <h2 className="text-xl font-bold text-navy mb-4">Other Ways to Reach Us</h2>
-                    <div className="space-y-2 text-slate-600">
-                        <p><strong>Email:</strong> contact@finblog.com</p>
-                        <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                        <p><strong>Address:</strong> 123 Finance Street, New York, NY 10001</p>
-                    </div>
-                </div>
+
             </div>
         </div>
     );
