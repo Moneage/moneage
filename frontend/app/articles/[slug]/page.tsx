@@ -209,8 +209,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         {/* Date */}
                         <div className="flex items-center gap-2 text-slate-600">
                             <Calendar className="w-4 h-4" />
-                            <time>{format(new Date(article.publishedAt), 'MMMM d, yyyy')}</time>
+                            <time className="font-medium">{format(new Date(article.publishedAt), 'MMMM d, yyyy')}</time>
                         </div>
+
+                        {/* Last Updated */}
+                        {article.updatedAt && new Date(article.updatedAt).toDateString() !== new Date(article.publishedAt).toDateString() && (
+                            <div className="flex items-center gap-2 text-slate-500 text-sm">
+                                <span className="text-slate-400">•</span>
+                                <span>Updated {format(new Date(article.updatedAt), 'MMMM d, yyyy')}</span>
+                            </div>
+                        )}
 
                         {/* Actions */}
                         <div className="ml-auto">
