@@ -28,8 +28,8 @@ export default async function Home() {
 
   // Split articles for different sections
   const heroArticle = articles[0];
-  const sidebarArticles = articles.slice(1, 4);
-  const gridArticles = articles.slice(4);
+  const sidebarArticles = articles.slice(1, 3);
+  const gridArticles = articles.slice(3);
 
   return (
     <div className="space-y-12">

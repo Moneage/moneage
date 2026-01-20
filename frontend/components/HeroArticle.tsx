@@ -15,7 +15,7 @@ export default function HeroArticle({ article }: HeroArticleProps) {
         <Link href={`/articles/${article.slug}`} className="group block">
             <article className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-xl transition-shadow duration-300">
                 {/* Cover Image */}
-                <div className="aspect-[16/9] relative bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+                <div className="aspect-[21/9] relative bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
                     {imageUrl ? (
                         <Image
                             src={imageUrl}
@@ -33,7 +33,7 @@ export default function HeroArticle({ article }: HeroArticleProps) {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-5">
                     {/* Category Badge */}
                     {article.category && (
                         <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-900 mb-3 uppercase">
@@ -42,13 +42,13 @@ export default function HeroArticle({ article }: HeroArticleProps) {
                     )}
 
                     {/* Title */}
-                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3 leading-tight group-hover:text-blue-900 transition-colors">
+                    <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3 leading-tight group-hover:text-blue-900 transition-colors">
                         {article.title}
                     </h2>
 
                     {/* Excerpt */}
                     {article.excerpt && (
-                        <p className="text-slate-600 text-lg mb-4 line-clamp-2">
+                        <p className="text-slate-600 text-base mb-4 line-clamp-2">
                             {article.excerpt}
                         </p>
                     )}
