@@ -1,4 +1,5 @@
 import qs from 'qs';
+import { cache } from 'react';
 import { STRAPI_URL } from './constants';
 import { StrapiResponse, Article, Category } from '@/types';
 
@@ -30,7 +31,7 @@ export async function fetchAPI<T>(
         headers: {
             'Content-Type': 'application/json',
         },
-        next: { revalidate: 60 }, // ISR: Cache for 60 seconds, then revalidate
+        next: { revalidate: 300 }, // ISR: Cache for 5 minutes, then revalidate
         ...options,
     };
 
@@ -65,28 +66,28 @@ export async function getArticles(params = {}) {
     });
 }
 
-export async function getArticleBySlug(slug: string) {
+export const getArticleBySlug = cache(async (slug: string) => {
     const params = {
         filters: { slug },
         populate: ['coverImage', 'category', 'author.avatar', 'seo'],
     };
     const data = await fetchAPI<StrapiResponse<Article[]>>('/articles', params);
     return data.data[0];
-}
+});
 
 export async function getCategories() {
     return fetchAPI<StrapiResponse<Category[]>>('/categories', { populate: '*' });
 }
 
-export async function getCategoryBySlug(slug: string) {
+export const getCategoryBySlug = cache(async (slug: string) => {
     const params = {
         filters: { slug },
     };
     const data = await fetchAPI<StrapiResponse<Category[]>>('/categories', params);
     return data.data[0];
-}
+});
 
-export async function getArticlesByCategory(slug: string) {
+export const getArticlesByCategory = cache(async (slug: string) => {
     const params = {
         filters: {
             category: {
@@ -99,7 +100,7 @@ export async function getArticlesByCategory(slug: string) {
         sort: ['publishedAt:desc'],
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', params);
-}
+});
 
 export async function searchArticles(query: string) {
     const params = {

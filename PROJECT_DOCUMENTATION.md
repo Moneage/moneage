@@ -4,7 +4,7 @@
 
 **Moneage** is a comprehensive financial insights platform built for the Nepali market, featuring articles, financial calculators, market tickers, newsletter subscriptions, and advertisement integration. The platform consists of a headless CMS backend (Strapi) and a modern Next.js frontend.
 
-**Live URL:** https://moneage.com  
+**Live URL:** https://moneage.com
 **Vercel Preview:** https://moneage-puce.vercel.app
 
 ---
@@ -14,6 +14,7 @@
 ### Tech Stack
 
 #### Frontend
+
 - **Framework:** Next.js 15.1.3 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
@@ -22,6 +23,7 @@
 - **Domain:** moneage.com (DNS via Himalayan Host)
 
 #### Backend
+
 - **CMS:** Strapi 5.5.0
 - **Language:** TypeScript
 - **Database:** PostgreSQL (Render)
@@ -29,6 +31,7 @@
 - **API:** RESTful API with authentication
 
 #### External Services
+
 - **Image Storage:** Cloudinary
 - **Email Service:** Resend (via Nodemailer SMTP)
 - **Market Data:** TradingView Widget API
@@ -40,6 +43,7 @@
 ## Hosting & Infrastructure
 
 ### Frontend Hosting (Vercel)
+
 - **Service:** Vercel
 - **Repository:** Connected to GitHub (auto-deploy on push to `main`)
 - **Domain Configuration:**
@@ -55,6 +59,7 @@
   - `NEXT_PUBLIC_GA_ID` - Google Analytics ID
 
 ### Backend Hosting (Render)
+
 - **Service:** Render Web Service
 - **Database:** Render PostgreSQL
 - **Build Command:** `npm run build`
@@ -78,12 +83,14 @@
   - `DEFAULT_FROM_EMAIL` - Default sender email (onboarding@resend.dev)
 
 ### Image Storage (Cloudinary)
+
 - **Provider:** Cloudinary
 - **Usage:** All media uploads (article images, ad images)
 - **Integration:** Strapi upload provider (`@strapi/provider-upload-cloudinary`)
 - **Configuration:** `backend/config/plugins.ts`
 
 ### Database (PostgreSQL)
+
 - **Provider:** Render PostgreSQL
 - **Version:** PostgreSQL 14+
 - **SSL:** Required (enabled)
@@ -95,6 +102,7 @@
 ## Repository Information
 
 ### GitHub Repository
+
 - **Organization:** Moneage
 - **Repository Name:** moneage
 - **URL:** https://github.com/Moneage/moneage
@@ -110,6 +118,7 @@
   ```
 
 ### Deployment Workflow
+
 1. Push code to `main` branch
 2. GitHub triggers webhooks
 3. Vercel auto-deploys frontend
@@ -120,6 +129,7 @@
 ## Features
 
 ### 1. Content Management
+
 - **Articles:** Full blog system with rich text editor
 - **Categories:** Organize articles by topics
 - **Authors:** Multi-author support with profiles
@@ -127,27 +137,32 @@
 - **Dynamic Sitemap:** Auto-generated from Strapi content
 
 ### 2. Financial Calculators
+
 Located at `/tools`:
 
 #### SIP Calculator (`/tools/sip-calculator`)
+
 - Monthly investment calculator
 - Expected returns calculation
 - Visual breakdown with donut chart
 - Logic: `frontend/lib/calculators/sip.ts`
 
 #### EMI Calculator (`/tools/emi-calculator`)
+
 - Loan EMI calculation
 - Principal vs Interest breakdown
 - Amortization visualization
 - Logic: `frontend/lib/calculators/emi.ts`
 
 #### ROI Calculator (`/tools/roi-calculator`)
+
 - Return on Investment calculator
 - Lumpsum investment analysis
 - Profit/loss visualization
 - Logic: `frontend/lib/calculators/roi.ts`
 
 ### 3. Dynamic Market Ticker
+
 - **Location:** Homepage header
 - **Data Source:** TradingView Widget API
 - **Management:** Strapi `Ticker` collection
@@ -158,6 +173,7 @@ Located at `/tools`:
   - Active/inactive toggle
 
 ### 4. Newsletter System
+
 - **Frontend Component:** `NewsletterForm.tsx`
 - **API Route:** `frontend/app/api/newsletter/route.ts`
 - **Backend:** Strapi `Subscriber` collection
@@ -169,6 +185,7 @@ Located at `/tools`:
   - Source tracking
 
 ### 5. Advertisement Integration
+
 - **Management:** Strapi `Advertisement` collection
 - **Component:** `AdUnit.tsx`
 - **Google AdSense:** Integrated via `GoogleAdSense.tsx` component
@@ -188,6 +205,7 @@ Located at `/tools`:
   - Click tracking ready
 
 ### 6. Search Functionality
+
 - **Location:** Navbar search bar
 - **Endpoint:** `/api/search`
 - **Search Scope:** Article titles and content
@@ -197,6 +215,7 @@ Located at `/tools`:
   - Highlighted results
 
 ### 7. SEO & Analytics
+
 - **Google Search Console:** Verified
 - **Google Analytics:** Integrated via `GoogleAnalytics.tsx` component
 - **Google AdSense:** Fully integrated
@@ -214,9 +233,11 @@ Located at `/tools`:
 ## Strapi Collections
 
 ### Article
+
 **Path:** `backend/src/api/article/content-types/article/schema.json`
 
 **Fields:**
+
 - `title` (string, required)
 - `slug` (UID, required)
 - `description` (text)
@@ -228,35 +249,44 @@ Located at `/tools`:
 - `seo` (component: SEO)
 
 ### Category
+
 **Fields:**
+
 - `name` (string)
 - `slug` (UID)
 - `description` (text)
 - `articles` (relation to Article)
 
 ### Author
+
 **Fields:**
+
 - `name` (string)
 - `bio` (text)
 - `avatar` (media)
 - `articles` (relation to Article)
 
 ### Ticker
+
 **Path:** `backend/src/api/ticker/content-types/ticker/schema.json`
 
 **Fields:**
+
 - `symbol` (string, required) - e.g., "FOREXCOM:SPXUSD"
 - `title` (string) - Display name
 - `isActive` (boolean, default: true)
 - `order` (integer) - Display order
 
 **Permissions:**
+
 - Public: `find` (read-only)
 
 ### Advertisement
+
 **Path:** `backend/src/api/advertisement/content-types/advertisement/schema.json`
 
 **Fields:**
+
 - `title` (string, required)
 - `placement` (enumeration: 'homepage-sidebar', 'article-bottom')
 - `type` (enumeration: 'image', 'code')
@@ -266,20 +296,25 @@ Located at `/tools`:
 - `isActive` (boolean, default: true)
 
 **Permissions:**
+
 - Public: `find` (read-only)
 
 ### Subscriber
+
 **Path:** `backend/src/api/subscriber/content-types/subscriber/schema.json`
 
 **Fields:**
+
 - `email` (email, required, unique)
 - `isActive` (boolean, default: true)
 - `source` (string) - Subscription source
 
 **Lifecycle Hook:**
+
 - `afterCreate` - Sends welcome email via Resend
 
 **Permissions:**
+
 - Public: `create`, `find`
 
 ---
@@ -289,9 +324,11 @@ Located at `/tools`:
 ### Frontend API Routes
 
 #### Newsletter Subscription
+
 **Endpoint:** `POST /api/newsletter`
 
 **Request Body:**
+
 ```json
 {
   "email": "user@example.com"
@@ -299,6 +336,7 @@ Located at `/tools`:
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -309,26 +347,32 @@ Located at `/tools`:
 ### Strapi API Endpoints
 
 #### Get Articles
+
 **Endpoint:** `GET /api/articles`
 
 **Query Parameters:**
+
 - `populate=*` - Populate relations
 - `filters[category][slug][$eq]=category-slug` - Filter by category
 - `sort=publishedAt:desc` - Sort by date
 - `pagination[page]=1&pagination[pageSize]=10` - Pagination
 
 #### Get Tickers
+
 **Endpoint:** `GET /api/tickers`
 
 **Query:**
+
 ```
 ?filters[isActive][$eq]=true&sort=order:asc
 ```
 
 #### Get Advertisements
+
 **Endpoint:** `GET /api/advertisements`
 
 **Query:**
+
 ```
 ?filters[placement][$eq]=homepage-sidebar&filters[isActive][$eq]=true
 ```
@@ -338,6 +382,7 @@ Located at `/tools`:
 ## Email Configuration
 
 ### Resend Integration
+
 **Provider:** Resend (via Nodemailer SMTP)
 
 **Configuration:** `backend/config/plugins.ts`
@@ -370,6 +415,7 @@ Location: `backend/src/api/subscriber/content-types/subscriber/lifecycles.ts`
 ## Environment Variables Reference
 
 ### Frontend (.env.local)
+
 ```bash
 NEXT_PUBLIC_STRAPI_URL=https://your-backend.onrender.com
 STRAPI_API_TOKEN=your_api_token_here
@@ -378,6 +424,7 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 ```
 
 ### Backend (.env)
+
 ```bash
 # Database
 DATABASE_CLIENT=postgres
@@ -409,6 +456,7 @@ DEFAULT_FROM_EMAIL=onboarding@resend.dev
 ## Development Setup
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - PostgreSQL (for local development)
 - Git
@@ -416,12 +464,14 @@ DEFAULT_FROM_EMAIL=onboarding@resend.dev
 ### Local Development
 
 #### 1. Clone Repository
+
 ```bash
 git clone https://github.com/Moneage/moneage.git
 cd moneage
 ```
 
 #### 2. Backend Setup
+
 ```bash
 cd backend
 npm install
@@ -433,6 +483,7 @@ npm run develop
 Backend runs at: `http://localhost:1337`
 
 #### 3. Frontend Setup
+
 ```bash
 cd frontend
 npm install
@@ -446,6 +497,7 @@ Frontend runs at: `http://localhost:3000`
 ### Building for Production
 
 #### Frontend
+
 ```bash
 cd frontend
 npm run build
@@ -453,6 +505,7 @@ npm run start
 ```
 
 #### Backend
+
 ```bash
 cd backend
 npm run build
@@ -464,6 +517,7 @@ npm run start
 ## Common Tasks
 
 ### Adding a New Article
+
 1. Login to Strapi Admin
 2. Go to Content Manager → Article
 3. Click "Create new entry"
@@ -472,6 +526,7 @@ npm run start
 6. Click "Save" and "Publish"
 
 ### Adding Ticker Symbols
+
 1. Login to Strapi Admin
 2. Go to Content Manager → Ticker
 3. Click "Create new entry"
@@ -480,6 +535,7 @@ npm run start
 6. Click "Save" and "Publish"
 
 ### Managing Advertisements
+
 1. Login to Strapi Admin
 2. Go to Content Manager → Advertisement
 3. Create new entry
@@ -491,24 +547,29 @@ npm run start
 ### Deploying Changes
 
 #### Frontend Changes
+
 ```bash
 git add .
 git commit -m "Your commit message"
 git push origin main
 ```
+
 Vercel auto-deploys in ~2 minutes.
 
 #### Backend Changes
+
 ```bash
 git add .
 git commit -m "Your commit message"
 git push origin main
 ```
+
 Render auto-deploys in ~3-5 minutes.
 
 ### Checking Logs
 
 #### Vercel Logs
+
 1. Go to Vercel Dashboard
 2. Select "moneage" project
 3. Click "Deployments"
@@ -516,6 +577,7 @@ Render auto-deploys in ~3-5 minutes.
 5. View "Build Logs" or "Function Logs"
 
 #### Render Logs
+
 1. Go to Render Dashboard
 2. Select backend service
 3. Click "Logs" tab
@@ -526,29 +588,34 @@ Render auto-deploys in ~3-5 minutes.
 ## Troubleshooting
 
 ### Frontend Build Errors
+
 - Check Vercel deployment logs
 - Verify environment variables are set
 - Ensure `NEXT_PUBLIC_STRAPI_URL` is correct
 - Check for TypeScript errors locally: `npm run build`
 
 ### Backend Not Responding
+
 - Check Render service status
 - Verify database connection (check DATABASE_* env vars)
 - Check Render logs for errors
 - Restart service if needed
 
 ### Images Not Loading
+
 - Verify Cloudinary credentials
 - Check `CLOUDINARY_NAME`, `CLOUDINARY_KEY`, `CLOUDINARY_SECRET`
 - Test upload in Strapi Media Library
 
 ### Newsletter Not Sending Emails
+
 - Verify `RESEND_API_KEY` is set
 - Check Resend dashboard for quota/errors
 - Note: Free tier only sends to verified email
 - Check Strapi logs for email errors
 
 ### DNS Issues
+
 - Check DNS propagation: https://dnschecker.org
 - Verify A record: `76.76.21.21`
 - Verify CNAME: `cname.vercel-dns.com`
@@ -559,16 +626,19 @@ Render auto-deploys in ~3-5 minutes.
 ## Security Notes
 
 ### API Tokens
+
 - Strapi API tokens are in Settings → API Tokens
 - Use read-only tokens for frontend
 - Never commit `.env` files to Git
 
 ### Database Access
+
 - PostgreSQL is only accessible via Render's internal network
 - Use Render dashboard for database management
 - Regular backups are automatic
 
 ### CORS Configuration
+
 - Backend CORS is configured in `backend/config/middlewares.ts`
 - Allows requests from `moneage.com` and Vercel preview URLs
 
@@ -577,17 +647,20 @@ Render auto-deploys in ~3-5 minutes.
 ## Performance Optimization
 
 ### Frontend
+
 - Next.js Image optimization (automatic)
 - Static page generation where possible
 - Dynamic imports for heavy components
 - Vercel Edge Network CDN
 
 ### Backend
+
 - Database query optimization with Strapi populate
 - Cloudinary image transformations
 - API response caching (consider adding Redis)
 
 ### Images
+
 - Cloudinary automatic format optimization
 - Responsive images via Next.js Image component
 - Lazy loading enabled
@@ -597,6 +670,7 @@ Render auto-deploys in ~3-5 minutes.
 ## Removed Features
 
 ### Features Removed from Production
+
 - **Text-to-Speech Article Reader:** Removed due to reliability issues
   - Previously located in `ArticleActions.tsx`
   - Experienced intermittent failures and errors
@@ -610,6 +684,7 @@ Render auto-deploys in ~3-5 minutes.
 ## Future Enhancements
 
 ### Planned Features
+
 - [ ] User authentication and profiles
 - [ ] Comment system for articles
 - [ ] Bookmarking functionality
@@ -621,6 +696,7 @@ Render auto-deploys in ~3-5 minutes.
 - [ ] Improved Text-to-Speech article reader
 
 ### Technical Improvements
+
 - [ ] Redis caching layer
 - [ ] GraphQL API option
 - [ ] Automated testing (Jest, Playwright)
@@ -633,12 +709,14 @@ Render auto-deploys in ~3-5 minutes.
 ## Support & Contacts
 
 ### Developer Resources
+
 - **Strapi Docs:** https://docs.strapi.io
 - **Next.js Docs:** https://nextjs.org/docs
 - **Vercel Docs:** https://vercel.com/docs
 - **Render Docs:** https://render.com/docs
 
 ### Service Dashboards
+
 - **Vercel:** https://vercel.com/dashboard
 - **Render:** https://dashboard.render.com
 - **Cloudinary:** https://cloudinary.com/console
@@ -650,12 +728,14 @@ Render auto-deploys in ~3-5 minutes.
 ## Version History
 
 ### v1.1.0 (Current)
+
 - Google AdSense script integration (auto ads enabled)
 - Removed unstable Text-to-Speech reader
 - Removed incomplete Stock Screener
 - Documentation updates
 
 ### v1.0.0
+
 - Initial production release
 - Core features: Articles, Calculators, Newsletter, Ads
 - SEO optimization
@@ -664,5 +744,5 @@ Render auto-deploys in ~3-5 minutes.
 
 ---
 
-**Last Updated:** January 12, 2026  
+**Last Updated:** January 12, 2026
 **Maintained By:** Moneage Development Team
