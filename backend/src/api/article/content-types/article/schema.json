@@ -21,8 +21,7 @@
             "targetField": "title"
         },
         "content": {
-            "type": "richtext",
-            "customField": "plugin::ckeditor.CKEditor"
+            "type": "richtext"
         },
         "excerpt": {
             "type": "text"
