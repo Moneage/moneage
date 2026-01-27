@@ -58,7 +58,7 @@ export async function fetchAPI<T>(
 export async function getArticles(params = {}) {
     const defaultParams = {
         populate: ['coverImage', 'category', 'author.avatar', 'seo'],
-        sort: ['publishedAt:desc'],
+        sort: ['createdAt:desc'],
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', {
         ...defaultParams,
@@ -97,7 +97,7 @@ export const getArticlesByCategory = cache(async (slug: string) => {
             }
         },
         populate: ['coverImage', 'category', 'author.avatar', 'seo'],
-        sort: ['publishedAt:desc'],
+        sort: ['createdAt:desc'],
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', params);
 });
@@ -124,7 +124,7 @@ export async function searchArticles(query: string) {
             ],
         },
         populate: ['coverImage', 'category', 'author.avatar', 'seo'],
-        sort: ['publishedAt:desc'],
+        sort: ['createdAt:desc'],
     };
     return fetchAPI<StrapiResponse<Article[]>>('/articles', params);
 }
