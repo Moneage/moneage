@@ -255,7 +255,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         // Check if content is HTML string (richtext) or Blocks array
                         typeof article.content === 'string' ? (
                             // Richtext format (HTML string from CKEditor)
-                            <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                            <div
+                                className="prose prose-slate max-w-none prose-headings:font-bold prose-h2:text-3xl prose-h3:text-2xl prose-p:text-slate-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-strong:text-slate-900"
+                                dangerouslySetInnerHTML={{ __html: article.content }}
+                            />
                         ) : Array.isArray(article.content) ? (
                             // Blocks format (legacy)
                             article.content.map((block: any, index: number) => {
