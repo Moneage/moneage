@@ -251,59 +251,68 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
                 {/* Content with Text Size Controls */}
                 <ArticleReader>
-                    {article.content && Array.isArray(article.content) ? (
-                        article.content.map((block: any, index: number) => {
-                            if (block.type === 'paragraph') {
-                                return (
-                                    <p key={index} className="mb-6 text-slate-700 leading-relaxed">
-                                        {renderInlineContent(block.children)}
-                                    </p>
-                                );
-                            }
-                            if (block.type === 'heading') {
-                                const Tag = `h${block.level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-                                const className = block.level === 2
-                                    ? "text-3xl font-bold text-slate-900 mt-12 mb-6"
-                                    : "text-2xl font-bold text-slate-900 mt-10 mb-4";
-                                return (
-                                    <Tag key={index} className={className}>
-                                        {renderInlineContent(block.children)}
-                                    </Tag>
-                                );
-                            }
-                            if (block.type === 'list') {
-                                const Tag = block.format === 'ordered' ? 'ol' : 'ul';
-                                const listClass = block.format === 'ordered'
-                                    ? "list-decimal pl-6 mb-6 text-slate-700 marker:text-slate-500"
-                                    : "list-disc pl-6 mb-6 text-slate-700 marker:text-slate-500";
-                                return (
-                                    <Tag key={index} className={listClass}>
-                                        {block.children.map((item: any, itemIndex: number) => (
-                                            <li key={itemIndex} className="mb-2 pl-1 leading-relaxed">
-                                                {renderInlineContent(item.children)}
-                                            </li>
-                                        ))}
-                                    </Tag>
-                                );
-                            }
-                            // Handle quotes
-                            if (block.type === 'quote') {
-                                return (
-                                    <blockquote key={index} className="border-l-4 border-blue-500 pl-4 italic my-6 text-slate-700 bg-slate-50 py-3 pr-4 rounded-r-lg">
-                                        {renderInlineContent(block.children)}
-                                    </blockquote>
-                                );
-                            }
-                            // Handle code blocks
-                            if (block.type === 'code') {
-                                return (
-                                    <pre key={index} className="bg-slate-900 text-slate-50 p-4 rounded-lg overflow-x-auto mb-6 text-sm font-mono">
-                                        <code>{block.children[0].text}</code>
-                                    </pre>
-                                );
-                            }
-                            return null;
-                        })
+                    {article.content ? (
+                        // Check if content is HTML string (richtext) or Blocks array
+                        typeof article.content === 'string' ? (
+                            // Richtext format (HTML string from CKEditor)
+                            <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                        ) : Array.isArray(article.content) ? (
+                            // Blocks format (legacy)
+                            article.content.map((block: any, index: number) => {
+                                if (block.type === 'paragraph') {
+                                    return (
+                                        <p key={index} className="mb-6 text-slate-700 leading-relaxed">
+                                            {renderInlineContent(block.children)}
+                                        </p>
+                                    );
+                                }
+                                if (block.type === 'heading') {
+                                    const Tag = `h${block.level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+                                    const className = block.level === 2
+                                        ? "text-3xl font-bold text-slate-900 mt-12 mb-6"
+                                        : "text-2xl font-bold text-slate-900 mt-10 mb-4";
+                                    return (
+                                        <Tag key={index} className={className}>
+                                            {renderInlineContent(block.children)}
+                                        </Tag>
+                                    );
+                                }
+                                if (block.type === 'list') {
+                                    const Tag = block.format === 'ordered' ? 'ol' : 'ul';
+                                    const listClass = block.format === 'ordered'
+                                        ? "list-decimal pl-6 mb-6 text-slate-700 marker:text-slate-500"
+                                        : "list-disc pl-6 mb-6 text-slate-700 marker:text-slate-500";
+                                    return (
+                                        <Tag key={index} className={listClass}>
+                                            {block.children.map((item: any, itemIndex: number) => (
+                                                <li key={itemIndex} className="mb-2 pl-1 leading-relaxed">
+                                                    {renderInlineContent(item.children)}
+                                                </li>
+                                            ))}
+                                        </Tag>
+                                    );
+                                }
+                                // Handle quotes
+                                if (block.type === 'quote') {
+                                    return (
+                                        <blockquote key={index} className="border-l-4 border-blue-500 pl-4 italic my-6 text-slate-700 bg-slate-50 py-3 pr-4 rounded-r-lg">
+                                            {renderInlineContent(block.children)}
+                                        </blockquote>
+                                    );
+                                }
+                                // Handle code blocks
+                                if (block.type === 'code') {
+                                    return (
+                                        <pre key={index} className="bg-slate-900 text-slate-50 p-4 rounded-lg overflow-x-auto mb-6 text-sm font-mono">
+                                            <code>{block.children[0].text}</code>
+                                        </pre>
+                                    );
+                                }
+                                return null;
+                            })
+                        ) : (
+                            <p className="text-slate-600">Invalid content format.</p>
+                        )
                     ) : (
                         <p className="text-slate-600">No content available.</p>
                     )}
