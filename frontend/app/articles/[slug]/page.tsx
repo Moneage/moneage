@@ -11,6 +11,8 @@ import StructuredData from '@/components/StructuredData';
 import { generateArticleSchema, generateBreadcrumbSchema, generatePersonSchema, generateFAQSchema } from '@/lib/schema';
 import { parseFAQFromContent } from '@/lib/contentParser';
 import ArticleActions from '@/components/ArticleActions';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 import ReadNext from '@/components/ReadNext';
 import ArticleReader from '@/components/ArticleReader';
