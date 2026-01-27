@@ -34,5 +34,9 @@ export default ({ env }) => ({
     },
     ckeditor: {
         enabled: true,
+        config: {
+            preset: 'rich', // Use HTML output instead of Markdown
+            maxLength: 50000,
+        },
     },
 });
