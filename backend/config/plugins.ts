@@ -32,4 +32,7 @@ export default ({ env }) => ({
             },
         },
     },
+    ckeditor: {
+        enabled: true,
+    },
 });
